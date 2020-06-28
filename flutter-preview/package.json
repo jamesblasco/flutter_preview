@@ -1,0 +1,85 @@
+{
+	"name": "flutter-preview",
+	"displayName": "Flutter Preview",
+	"description": "Display a preview of your widget while building them",
+	"publisher": "jamesblasco",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.46.0"
+	},
+	"preview": true,
+	"categories": [
+		"Other", "Snippets"
+	],
+	"activationEvents": [
+		"onLanguage:dart",
+		"workspaceContains:**/pubspec.yaml",
+		"workspaceContains:**/*.dart",
+		"workspaceContains:dart.sh.create",
+		"workspaceContains:flutter.sh.create",
+		"workspaceContains:flutter.create",
+		"onCommand:flutter.createProject",
+		"onCommand:dart.createProject",
+		"onCommand:_dart.flutter.createSampleProject",
+		"onCommand:flutter.doctor",
+		"onCommand:flutter.upgrade",
+		"onUri"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "flutter-preview.run",
+				"title": "Flutter Preview : Run",
+				"category": "preview",
+				"icon": {
+					"light": "./images/icon_light.svg",
+					"dark": "./images/icon_dark.svg"
+				}
+			},
+			{
+				"command": "flutter-preview.activate",
+				"title": "Flutter Preview : Activate"
+			}
+		],
+		"menus": {
+			"editor/title": [
+				{
+					"when": "resourceLangId == dart && !flutter_preview.isActive",
+					"command": "flutter-preview.run",
+					"group": "navigation@1"
+				}
+			]
+		},
+		"snippets": [
+			{
+				"language": "dart",
+				"path": "./snippets.json"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint src --ext ts",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.46.0",
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^7.0.2",
+		"@types/node": "^13.11.0",
+		"eslint": "^6.8.0",
+		"@typescript-eslint/parser": "^2.30.0",
+		"@typescript-eslint/eslint-plugin": "^2.30.0",
+		"glob": "^7.1.6",
+		"mocha": "^7.1.2",
+		"typescript": "^3.8.3",
+		"vscode-test": "^1.3.0"
+	},
+	"extensionPack": [
+		"dart-code.flutter"
+	]
+}

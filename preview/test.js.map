@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "engine": "v2",
+  "file": "test.js",
+  "sourceRoot": "",
+  "sources": ["org-dartlang-sdk:///sdk/lib/_internal/js_runtime/lib/rti.dart","lib/code_generator.dart"],
+  "names": ["_Universe.addRules","_Universe.addErasedTypes","_Utils.objectAssign","main","objectAssign","num","Object","String","addRules","addErasedTypes","throwCyclicInit","closureFromTearOff","int","double","bool","Null","List","toString"],
+  "mappings": "A;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2BAi5CaA;EADCA,cACRA,kBAA+CA,C;EAEvCC,cACRA,OAAOA,WAA0CA,C;EAq5CzCC,cAGeA;AACzBA,oBAE2BA;UAE7BA,C;EC/yFGC,WAELA,C",
+  "x_org_dartlang_dart2js": {
+    "minified_names": {
+      "global": "d,4,c,5,a,6,b,7,f,3,h,8,k,9,o,10,e,11,n,12,m,13,l,14,j,15,i,16",
+      "instance": "h,17"
+    },
+    "frames": ""
+  }
+}

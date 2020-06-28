@@ -1,0 +1,13 @@
+{
+    "Flutter Preview": {
+      "prefix": ["preview"],
+      "body": ["",
+      "class WidgetPreview extends PreviewProvider {",
+       " @override",
+       " List<Preview> get previews => [",
+        "   ",
+        " ];",
+        "}"],
+      "description": "Add a preview provider."
+    }
+  }
