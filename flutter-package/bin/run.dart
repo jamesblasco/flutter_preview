@@ -2,13 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 
 import 'package:analyzer/dart/ast/visitor.dart';
 
-import 'run_old.dart';
 
+final featureSet = FeatureSet.fromEnableFlags([
+  'extension-methods',
+  //'non-nullable',
+]);
 
 
 Future<void> main() async {
