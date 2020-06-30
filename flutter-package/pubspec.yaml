@@ -15,7 +15,13 @@ dependencies:
   analyzer: ^0.39.6
   _fe_analyzer_shared: ^2.1.0
   args: ^1.6.0
-  device_frame: ^0.1.2
+  async: ^2.4.1
+  device_frame: ^0.1.0
+  vm_service: ^4.1.0
+  window_size: 
+    git:
+      url: https://github.com/google/flutter-desktop-embedding
+      path: plugins/window_size/
 
 dev_dependencies:
   flutter_test:
@@ -29,6 +35,11 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+
+  fonts:
+    - family: PreviewIcons
+      fonts:
+        - asset: assets/PreviewIcons.ttf
   # This section identifies this Flutter project as a plugin project.
   # The 'pluginClass' and Android 'package' identifiers should not ordinarily
   # be modified. They are used by the tooling to maintain consistency when

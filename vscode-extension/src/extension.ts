@@ -19,12 +19,9 @@ var service: PreviewService | undefined;
 export function activate(context: vscode.ExtensionContext) {
 
 	console.log('Congratulations, your extension "flutter-preview" is now active!');
-	vscode.window.showInformationMessage("Preview is now active");
+
 	vscode.commands.executeCommand("setContext", isActiveContext, false);
-
 	vscode.commands.executeCommand("flutter-preview.activate");
-
-
 
 
 	let disposable2 = vscode.commands.registerCommand('flutter-preview.activate', () => {
@@ -48,16 +45,15 @@ export function activate(context: vscode.ExtensionContext) {
 
 	});
 
+	
+
 
 	let disposable = vscode.commands.registerCommand('flutter-preview.run', () => {
 		service?.start();
-		
 	});
 
 
 	//	envStatusBarItem.command = disposable;
-
-
 	context.subscriptions.push(disposable);
 }
 

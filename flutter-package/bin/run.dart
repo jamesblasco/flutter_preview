@@ -7,27 +7,68 @@ import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:async/async.dart';
 
+import 'hot_restart_server.dart';
 
 final featureSet = FeatureSet.fromEnableFlags([
   'extension-methods',
   //'non-nullable',
 ]);
 
-
 Future<void> main() async {
-  Stream<String> cmdLine =
-      stdin.transform(Utf8Decoder()).transform(LineSplitter());
+  Stream<StreamResponse> cmdLine = stdin
+      .transform(Utf8Decoder())
+      .transform(LineSplitter())
+      .map((event) => StreamResponse(stdin: event));
+  //final server = await HttpServer.bind('127.0.0.1', 8081);
+  //Stream<StreamResponse> requests =
+  //    server.map((event) => StreamResponse(request: event));
 
-  await for (String file in cmdLine) {
-    try {
-      if (File(file).existsSync()) {
-        generatePreview(file);
-        // request.response.write('Hello, world');
-      }
-    } catch (e) {
-      print(e);
-    }
+  //ProcessSignal.sigint.watch().listen((_) async => await server.close());
+
+  final group = StreamGroup.merge([cmdLine]);
+
+  await for (final response in group) {
+    response.when(
+      stdin: (file) {
+        try {
+          if (File(file).existsSync()) {
+            generatePreview(file);
+            // request.response.write('Hello, world');
+          }
+        } catch (e) {
+          stdout.write(e);
+          print(e);
+        }
+      },
+      request: (request) async {
+        final hotRestart = request.uri.queryParameters['hotrestart'] == 'true';
+
+        if (hotRestart) {
+          stdout.write('Needs restart\n');
+          request.response.write('Needs restart\n');
+        } else {
+          request.response.write('No param found\n');
+        }
+        await request.response.close();
+      },
+    );
+  }
+}
+
+class StreamResponse {
+  final String stdin;
+  final HttpRequest request;
+
+  StreamResponse({
+    this.stdin,
+    this.request,
+  });
+
+  when({Function(String stdin) stdin, Function(HttpRequest request) request}) {
+    if (this.stdin != null) stdin?.call(this.stdin);
+    if (this.request != null) request?.call(this.request);
   }
 }
 
@@ -72,10 +113,29 @@ class ExtractPreviewsVisitor extends RecursiveAstVisitor {
 
   @override
   visitClassDeclaration(ClassDeclaration node) {
-    final supportedProviders = ['ResizablePreviewProvider', 'PreviewProvider'];
-    if (supportedProviders.contains(node.extendsClause.superclass.toString())) {
+    final supportedExtended = 'PreviewProvider';
+    final supportedMixin = 'Previewer';
+
+    bool isExtended() {
+      final extendedClass = node.extendsClause.superclass.toString();
+      return supportedExtended == extendedClass;
+    }
+
+    bool isInMixin() {
+      final item = node.withClause?.mixinTypes?.firstWhere(
+        (c) {
+          print(c.toString());
+          return supportedMixin == c.toString();
+        },
+        orElse: () => null,
+      );
+      return item != null;
+    }
+
+    if (isExtended() || isInMixin()) {
       providers.add(node.name.toString());
     }
+
     return super.visitClassDeclaration(node);
   }
 }
@@ -88,16 +148,16 @@ import 'package:flutter/widgets.dart';
 import 'package:preview/preview.dart';
 import '$import';  
 void main() {
-  runApp(PreviewApp());
+  runApp(_PreviewApp());
 }
 
-class PreviewApp extends StatelessWidget {
+class _PreviewApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PreviewPage(
-      path: '$filePath',
-      providers: [
-        ${providers.reversed.fold('', (p, e) => e + '(),' + p)}
+      path: '$import',
+      providers: () => [
+        ${providers.reversed.fold('', (p, e) => e + '(), \n        ' + p)}
       ],
     );
   }
@@ -134,10 +194,10 @@ import 'package:preview/preview.dart';
 //
 
 void main() {
-  runApp(PreviewApp());
+  runApp(_PreviewApp());
 }
 
-class PreviewApp extends StatelessWidget {
+class _PreviewApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PreviewPage(
@@ -153,10 +213,10 @@ import 'package:flutter/widgets.dart';
 import 'package:preview/preview.dart';
 
 void main() {
-  runApp(PreviewApp());
+  runApp(_PreviewApp());
 }
 
-class PreviewApp extends StatelessWidget {
+class _PreviewApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PreviewPage(
@@ -172,10 +232,10 @@ import 'package:flutter/widgets.dart';
 import 'package:preview/preview.dart';
 
 void main() {
-  runApp(PreviewApp());
+  runApp(_PreviewApp());
 }
 
-class PreviewApp extends StatelessWidget {
+class _PreviewApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PreviewPage(

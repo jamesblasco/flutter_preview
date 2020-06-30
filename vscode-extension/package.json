@@ -3,7 +3,7 @@
 	"displayName": "Flutter Preview",
 	"description": "Display a preview of your widget while building them",
 	"publisher": "jamesblasco",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"engines": {
 		"vscode": "^1.46.0"
 	},

@@ -1,6 +1,8 @@
 import 'package:device_frame/device_frame.dart';
 import 'package:flutter/material.dart';
-import 'package:preview/frame/frame.dart';
+
+import 'frame.dart';
+
 
 class Frames {
   static final iphoneXR = _iphoneXr;
@@ -83,7 +85,7 @@ FrameData _iphone8 = _cupertinoWithoutNotchFrame.copyWith(
   ),
 );
 
-FrameData _iPadAir2 = _cupertinoWithoutNotchFrame.copyWith(
+FrameData _iPadAir2 = _cupertinoTabletFrame.copyWith(
   size: const Size(768, 1024),
   pixelRatio: 2.0,
   portraitSafeArea: const EdgeInsets.only(
@@ -91,7 +93,7 @@ FrameData _iPadAir2 = _cupertinoWithoutNotchFrame.copyWith(
   ),
 );
 
-FrameData _iPadPro12 = _cupertinoWithoutNotchFrame.copyWith(
+FrameData _iPadPro12 = _cupertinoTabletWithThinBordersFrame.copyWith(
   size: const Size(1024, 1336),
   pixelRatio: 2.0,
   portraitSafeArea: const EdgeInsets.only(

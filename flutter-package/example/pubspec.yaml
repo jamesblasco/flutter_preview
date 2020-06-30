@@ -11,9 +11,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  preview:
-    path: ../    
-  palette_generator: ^0.2.3  
+   
+  palette_generator: ^0.2.3 
+  random_color: ^1.0.5 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -22,6 +22,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  preview:
+      path: ../ 
+  device_preview: ^0.4.5
+  flutter_storyboard: ^0.1.6
+  flutter_material_showcase: ^1.0.1
+       
   
 
 # For information on the generic Dart part of this file, see the
@@ -34,6 +40,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+
 
   assets:
     - preview_assets/cover1.jpg

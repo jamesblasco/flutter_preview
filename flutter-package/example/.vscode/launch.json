@@ -5,20 +5,9 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "program": "example/lib/main.dart",
             "name": "Flutter",
             "request": "launch",
             "type": "dart"
-        },
-        {
-            "cwd": "example/",
-            "name": "Flutter Preview",
-            "request": "launch",
-            "type": "dart",
-            "args": [
-                "--target=.dart_tool/preview/main.preview.dart",
-                "--verbose",
-            ],
         }
     ]
 }

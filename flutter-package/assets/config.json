@@ -1,0 +1,24 @@
+{
+  "name": "PreviewIcons",
+  "css_prefix_text": "",
+  "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
+  "glyphs": [
+    {
+      "uid": "e760c2177bd9d125a1770f7d955ceccc",
+      "css": "lightning-bolt",
+      "code": 59392,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M458.3 625H250L541.7 41.7V375H750L458.3 958.3V625Z",
+        "width": 1000
+      },
+      "search": [
+        "lightning-bolt"
+      ]
+    }
+  ]
+}

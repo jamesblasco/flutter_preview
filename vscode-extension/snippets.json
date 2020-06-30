@@ -1,13 +1,80 @@
 {
-    "Flutter Preview": {
-      "prefix": ["preview"],
-      "body": ["",
+  "Flutter Preview": {
+    "prefix": [
+      "preview"
+    ],
+    "body": [
+      "",
       "class WidgetPreview extends PreviewProvider {",
-       " @override",
-       " List<Preview> get previews => [",
-        "   ",
-        " ];",
-        "}"],
-      "description": "Add a preview provider."
-    }
+      " @override",
+      " List<Preview> get previews { ",
+      "  return [",
+      "   ",
+      "  ];",
+      " }",
+      "}"
+    ],
+    "description": "Add a preview provider."
+  },
+  "Flutter stateless widget with Preview": {
+    "prefix": [
+      "preview stless"
+    ],
+    "description": "Insert a StatelessWidget with a preview",
+    "body": [
+      "class $1 extends StatelessWidget {",
+      "  @override",
+      "  Widget build(BuildContext context) {",
+      "    return Container(",
+      "      $2",
+      "    );",
+      "  }",
+      "}",
+      "",
+      "",
+      "",
+      "class $1Preview extends PreviewProvider {",
+      " @override",
+      " List<Preview> get previews { ",
+      "  return [",
+      "    Preview(",
+      "      child: $1(),",
+      "    )",
+      "  ];",
+      " }",
+      "}"
+    ]
+  },
+  "Flutter stateful widget": {
+    "prefix": [
+      "preview stful"
+    ],
+    "description": "Insert a StatefulWidget with a preview",
+    "body": [
+      "class $1 extends StatefulWidget {",
+      "  @override",
+      "  _$1State createState() => _$1State();",
+      "}",
+      "",
+      "class _$1State extends State<$1> {",
+      "  @override",
+      "  Widget build(BuildContext context) {",
+      "    return Container(",
+      "      $2",
+      "    );",
+      "  }",
+      "}",
+      "",
+      "class $1Preview extends PreviewProvider {",
+      " @override",
+      " List<Preview> get previews { ",
+      "  return [",
+      "    Preview(",
+      "      child: $1(),",
+      "    )",
+      "  ];",
+      " }",
+      "}"
+    ]
   }
+}

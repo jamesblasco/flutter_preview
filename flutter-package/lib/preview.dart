@@ -1,160 +1,15 @@
-import 'package:device_frame/device_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:preview/resizable.dart';
+import 'package:preview/src/controls.dart';
+import 'package:preview/src/frame/frame.dart';
+import 'package:preview/src/resizable.dart';
+import 'package:preview/src/persist.dart';
 
-import 'frame/frame.dart';
-export 'frame/frames.dart';
-export 'resizable.dart';
-
-class PreviewPage extends StatelessWidget {
-  final List<PreviewProvider> providers;
-  final String path;
-  final Widget child;
-
-  const PreviewPage({
-    Key key,
-    List<PreviewProvider> providers,
-    this.child,
-    this.path,
-  })  : this.providers = providers ?? const [],
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
-      home: KeyedSubtree(
-        key: Key('page_$path'),
-        child: _ProviderPageView(providers: providers, child: child),
-      ),
-    );
-  }
-}
-
-class _ProviderPageView extends StatefulWidget {
-  final List<PreviewProvider> providers;
-  final Widget child;
-
-  const _ProviderPageView({Key key, this.providers, this.child})
-      : super(key: key);
-  @override
-  __ProviderPageViewState createState() => __ProviderPageViewState();
-}
-
-class __ProviderPageViewState extends State<_ProviderPageView> {
-  int page = 0;
-  final PageController controller = PageController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Previews',
-          style: TextStyle(
-            fontSize: 14,
-          ),
-        ),
-        bottom: widget.providers.length <= 1
-            ? null
-            : PreferredSize(
-                child: Container(
-                  height: 40,
-                  color: Colors.blue,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AnimatedOpacity(
-                        duration: Duration(milliseconds: 300),
-                        opacity: page == 0 ? 0 : 1,
-                        child: IconButton(
-                          icon: Icon(Icons.chevron_left),
-                          onPressed: () => controller.previousPage(
-                              duration: Duration(milliseconds: 700),
-                              curve: Curves.easeInOut),
-                        ),
-                      ),
-                      Text('${page + 1} / ${widget.providers.length}'),
-                      AnimatedOpacity(
-                        duration: Duration(milliseconds: 300),
-                        opacity: page == (widget.providers.length -1) ? 0 : 1,
-                        child: IconButton(
-                          icon: Icon(Icons.chevron_right),
-                          onPressed: () => controller.nextPage(
-                              duration: Duration(milliseconds: 700),
-                              curve: Curves.easeInOut),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                preferredSize: Size(
-                  double.infinity,
-                  40,
-                ),
-              ),
-      ),
-      body: widget.child != null
-          ? Center(child: widget.child)
-          : PageView.builder(
-              controller: controller,
-              onPageChanged: (page) {
-                setState(() {
-                  this.page = page;
-                });
-              },
-              itemBuilder: (context, index) =>
-                  widget.providers[index].build(context),
-              itemCount: widget.providers.length,
-            ),
-    );
-  }
-}
-
-extension IterableExtension<T> on Iterable<T> {
-  Iterable<T> addInBetween(T item) sync* {
-    if (length <= 1) {
-      yield* this;
-      return;
-    }
-    for (final widget in take(length - 1)) {
-      yield widget;
-      yield item;
-    }
-    yield last;
-  }
-}
-
-abstract class PreviewProvider {
-  List<Preview> get previews;
-
-  Widget build(BuildContext context) {
-    return Center(
-      child: SingleChildScrollView(
-        child: Column(
-          children: List<Widget>.from(previews)
-              .addInBetween(
-                SizedBox(
-                  height: 20,
-                ),
-              )
-              .toList(),
-        ),
-      ),
-    );
-  }
-}
-
-abstract class ResizablePreviewProvider extends PreviewProvider {
-  Preview get preview;
-  List<Preview> get previews => [];
-  @override
-  Widget build(BuildContext context) {
-    return ResizebleWidget(child: preview);
-  }
-}
+import 'src/utils.dart';
+export 'src/frame/frame.dart';
+export 'src/frame/frames.dart';
+export 'src/preview_page.dart';
+export 'src/resizable.dart';
 
 class Preview extends StatelessWidget {
   final Widget child;
@@ -162,28 +17,153 @@ class Preview extends StatelessWidget {
   final double width;
   final BoxConstraints constraints;
   final FrameData frame;
-  const Preview(
-      {Key key,
-      @required this.child,
-      this.height,
-      this.width,
-      this.constraints,
-      this.frame})
-      : super(key: key);
+  final ThemeData theme;
+
+  const Preview({
+    Key key,
+    @required this.child,
+    this.height,
+    this.width,
+    this.constraints,
+    this.frame,
+    this.theme,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final widget = frame != null ? Frame(frame: frame, child: child) : child;
+    Widget result = frame != null ? Frame(frame: frame, child: child) : child;
+
     return Container(
       constraints: constraints,
       height: height,
       width: width,
-      child: widget,
+      child: Theme(
+        isMaterialAppTheme: true,
+        data: theme ?? Theme.of(context),
+        child: result,
+      ),
     );
   }
 }
 
-extension ObjectNull on Object {
-  bool get isNull => this == null;
-  bool get isNotNull => !isNull;
+
+mixin Previewer on StatelessWidget {
+  Widget build(BuildContext context);
+}
+
+abstract class PreviewProvider extends StatelessWidget with Previewer{
+  List<Preview> get previews;
+
+  Widget build(BuildContext context) {
+    return Scrollbar(
+      child: Center(
+        child: SingleChildScrollView(
+            child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            children: previews
+                .map<Widget>((e) => _Preview(child: e))
+                .addInBetween(SizedBox(height: 20))
+                .toList(),
+          ),
+        )),
+      ),
+    );
+  }
+}
+
+abstract class ResizablePreviewProvider extends StatelessWidget with Previewer {
+  Preview get preview;
+ 
+  @override
+  Widget build(BuildContext context) {
+    return _Preview(
+      resizable: true,
+      child: preview,
+    );
+  }
+}
+
+class _Preview extends StatefulWidget {
+  final Widget child;
+  final bool resizable;
+
+  const _Preview({
+    Key key,
+    @required this.child,
+    this.resizable = false,
+  }) : super(key: key);
+
+  @override
+  _PreviewState createState() => _PreviewState();
+}
+
+class _PreviewState extends State<_Preview> {
+  PersistController controller;
+
+  @override
+  void initState() {
+    
+    controller = PersistController();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final preview = Persist(controller: controller, child: widget.child);
+
+    if (widget.resizable) {
+      return OnHover(
+          child: widget.child,
+          builder: (context, hover, child) {
+            final shouldDisplay = hover | !controller.isLive;
+            return ResizableWidget(
+              child: preview,
+              trailing: AnimatedOpacity(
+                opacity: shouldDisplay ? 1 : 0,
+                duration: Duration(milliseconds: 200),
+                child: IgnorePointer(
+                  ignoring: !shouldDisplay,
+                  child: PreviewControls(
+                    controller: controller,
+                  ),
+                ),
+              ),
+            );
+          });
+    }
+
+    return OnHover(
+      child: widget.child,
+      builder: (context, hover, child) {
+        final shouldDisplay = hover | !controller.isLive;
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            SizedBox(width: 32),
+            Flexible(
+              child: preview,
+            ),
+            AnimatedOpacity(
+              opacity: shouldDisplay ? 1 : 0,
+              duration: Duration(milliseconds: 200),
+              child: IgnorePointer(
+                ignoring: !shouldDisplay,
+                child: PreviewControls(
+                  controller: controller,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 }

@@ -1,5 +1,10 @@
 import 'package:device_frame/device_frame.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+
+const previewAppBuilder = kDebugMode ? Frame._appBuilder : null;
+
 
 class FrameData {
   final DeviceFrameStyle style;
@@ -104,7 +109,7 @@ class Frame extends StatelessWidget {
     );
   }
 
-  static Widget appBuilder(
+  static Widget _appBuilder(
     BuildContext context,
     Widget widget,
   ) {

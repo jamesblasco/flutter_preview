@@ -31,9 +31,9 @@ export class PreviewService {
         vscode.commands.executeCommand("setContext", isActiveContext, true);
         await this.launchAnalyticsProccess();
         await this.launchDebugSession();
-        let disp = vscode.workspace.onDidSaveTextDocument(this.saveTextEditor);
+        let disp = vscode.workspace.onDidSaveTextDocument((e) => { this.saveTextEditor(e); });
         let disp2 = vscode.window.onDidChangeActiveTextEditor((e) => {
-            console.log('change');
+
             this.updateActiveTextEditor();
         });
         this.disposables.push(disp, disp2);
@@ -41,7 +41,6 @@ export class PreviewService {
     }
 
     launchAnalyticsProccess() {
-
         try {
             this.process = spawn('flutter', [
                 'pub',
@@ -52,8 +51,8 @@ export class PreviewService {
 
             this.process?.on('exit', (code) => {
                 console.log('child process exited with code : ', code);
-           });
-            
+            });
+
 
             this.process?.on('error', (err) => {
                 console.log('Error: ', err.toString());
@@ -62,6 +61,9 @@ export class PreviewService {
                 if (`${data}` === 'Needs reload\n') {
                     console.log('Hot reload');
                     vscode.commands.executeCommand('flutter.hotReload');
+                } if (`${data}` === 'Needs restart\n') {
+                    console.log('Hot Restart');
+                    vscode.commands.executeCommand('flutter.hotRestart');
                 } else {
                     console.log("Got data from child: " + data);
                 }
@@ -92,6 +94,7 @@ export class PreviewService {
                 "--target=lib/main.preview.dart"
             ],
         };
+
         const launched = await vscode.debug.startDebugging(vscode.workspace.workspaceFolders![0], launchConfiguration);
         if (!launched) {
             vscode.window.showInformationMessage('Flutter is not ready');
@@ -118,6 +121,7 @@ export class PreviewService {
 
 
     saveTextEditor(document: vscode.TextDocument) {
+        console.log(document.uri === this.currentDocument);
         if (document.languageId === "dart" && document.uri === this.currentDocument) {
             this.updateActiveTextEditor();
         }
@@ -126,12 +130,10 @@ export class PreviewService {
 
 
     updateActiveTextEditor() {
-
         const editor = vscode.window.activeTextEditor;
         this.currentDocument = editor?.document?.uri;
         const path = this.currentDocument!.toString().split(":")[1].replace(this.path + '/', '');
         this.process?.stdin?.write(path + '\n');
-
     };
 
     dispose() {

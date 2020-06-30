@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:preview/preview.dart';
@@ -36,7 +36,7 @@ class MusicCard extends StatelessWidget {
             height: 60,
             child: ClipRect(
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                 child: FutureBuilder<Color>(
                   future: getImagePalette(image),
                   builder: (context, snapshot) => Container(
@@ -66,13 +66,15 @@ class MusicCard extends StatelessWidget {
   }
 }
 
+
 class WidgetPreview extends PreviewProvider {
   
   @override
   List<Preview> get previews {
     return [
       Preview(
-        height: 200,
+        key: Key('test'),
+        height: 300,
         width: 200,
         child: MusicCard(
           title: 'Testa',
@@ -81,6 +83,7 @@ class WidgetPreview extends PreviewProvider {
         ),
       ),
       Preview(
+        key: Key('test1'),
         height: 200,
         width: 200,
         child: MusicCard(
@@ -90,6 +93,7 @@ class WidgetPreview extends PreviewProvider {
         ),
       ),
       Preview(
+        key: Key('test2'),
         height: 200,
         width: 200,
         child: MusicCard(
@@ -102,7 +106,7 @@ class WidgetPreview extends PreviewProvider {
   }
 }
 
-class MusicPreview extends ResizablePreviewProvider {
+class Resizable extends ResizablePreviewProvider with Previewer {
   @override
   Preview get preview {
     return Preview(
@@ -114,3 +118,4 @@ class MusicPreview extends ResizablePreviewProvider {
     );
   }
 }
+

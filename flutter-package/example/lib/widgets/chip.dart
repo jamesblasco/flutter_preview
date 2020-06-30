@@ -16,9 +16,10 @@ class Chip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _color = color ?? Theme.of(context).accentColor;
-    final padding = EdgeInsets.symmetric(horizontal: 12, vertical: 4);
+    final padding = EdgeInsets.symmetric(horizontal: 10, vertical: 4);
     final radius = BorderRadius.circular(4);
     if (outline) {
+      
       return Container(
         decoration: BoxDecoration(
             border: Border.all(color: _color), borderRadius: radius),
@@ -42,6 +43,8 @@ class Chip extends StatelessWidget {
     }
   }
 }
+
+
 
 class WidgetPreview extends PreviewProvider {
 
