@@ -158,19 +158,22 @@ class UnknownScreen extends StatelessWidget {
   }
 }
 
-class DevicePreviewPreview extends PreviewProvider with Previewer {
+class DevicePreviewProvider extends StatelessWidget with Previewer {
+  @override
+  String get title => 'Device Preview';
+
   @override
   Widget build(BuildContext context) {
     return DevicePreview(
       builder: (context) => MyApp(),
     );
   }
-
-  @override
-  List<Preview> get previews => [];
 }
 
 class DevicePreviewPreview2 extends PreviewProvider with Previewer {
+  @override
+  String get title => 'iPad Pro';
+
   @override
   Widget build(BuildContext context) {
     return DevicePreview(

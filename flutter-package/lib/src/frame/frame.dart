@@ -1,10 +1,10 @@
 import 'package:device_frame/device_frame.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
+export 'package:device_frame/device_frame.dart'
+    show DeviceFrameStyle, DeviceNotch, DeviceSideButton;
 
 const previewAppBuilder = kDebugMode ? Frame._appBuilder : null;
-
 
 class FrameData {
   final DeviceFrameStyle style;
@@ -99,12 +99,15 @@ class Frame extends StatelessWidget {
         mediaQueryData: mediaQuery,
         isKeyboardVisible: frame.isKeyboardVisible,
         keyboardTransitionDuration: frame.keyboardTransitionDuration,
-        child: child,
+        child: ClipRRect(
+            child: child,
+            borderRadius: frame.screenRadius ?? BorderRadius.zero),
         body: frame.bodyPadding,
         edgeRadius: frame.edgeRadius,
         screenRadius: frame.screenRadius,
         sideButtons: frame.sideButtons,
         notch: frame.notch,
+        
       ),
     );
   }

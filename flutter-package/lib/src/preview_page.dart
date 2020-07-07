@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:preview/preview.dart';
 import 'package:window_size/window_size.dart';
-
+import 'dart:convert';
 class PreviewPage extends StatelessWidget {
   final List<Previewer> Function() providers;
   final String path;
@@ -56,60 +56,12 @@ class _ProviderPageViewState extends State<_ProviderPageView>
     with TickerProviderStateMixin {
   TabController tabController;
 
-
   @override
   void initState() {
     ErrorWidget.builder = (FlutterErrorDetails details) {
       if (details.exceptionAsString() ==
           'Unimplemented handling of missing static target')
-        return Container(
-            color: Colors.black,
-            padding: EdgeInsets.all(20),
-            alignment: Alignment.center,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Material(
-                  child: IconButton(
-                      icon: Icon(Icons.replay),
-                      onPressed: () async {
-                        Timeline.timeSync("Doing Something", () {
-                          postEvent('Preview.hotRestart', <String, String>{});
-                        });
-                        /*  final client = HttpClient();
-                        final request = await client.getUrl(Uri.parse(
-                            'https://127.0.0.1:808/&hotrestart=true'));
-                        final response = await request.close();
-                        print(response); */
-                      }),
-                ),
-                Text(
-                  'An error occurred while\nperforming hot reload',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                  textDirection: TextDirection.ltr,
-                ),
-                SizedBox(height: 4),
-                Flexible(
-                  child: Text(
-                    'Unimplemented handling of missing static target',
-                    style: TextStyle(color: Colors.white38),
-                    textDirection: TextDirection.ltr,
-                  ),
-                ),
-                SizedBox(height: 20),
-                Flexible(
-                  child: Text(
-                    'Use hot restart to solve the problem',
-                    style: TextStyle(color: Colors.white),
-                    textDirection: TextDirection.ltr,
-                  ),
-                ),
-              ],
-            ));
+        return StaticTargetErrorWidget();
       String message = '';
       assert(() {
         message = _stringify(details.exception) +
@@ -121,16 +73,7 @@ class _ProviderPageViewState extends State<_ProviderPageView>
           message: message,
           error: exception is FlutterError ? exception : null);
     };
-    FlutterError.onError = (FlutterErrorDetails details) {
-      if (details.exceptionAsString() ==
-          'Unimplemented handling of missing static target') {
-        //WidgetsBinding.instance.reassembleApplication();
-        /*  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          WidgetsBinding.instance.reassembleApplication();
-        }); */
-      }
-      FlutterError.presentError(details);
-    };
+
     tabController = TabController(
         initialIndex: 0, length: widget.providers.length, vsync: this);
     tabController.addListener(update);
@@ -161,116 +104,119 @@ class _ProviderPageViewState extends State<_ProviderPageView>
                   isScrollable: true,
                   tabs: List.generate(
                     widget.providers.length,
-                    (index) => Tab(
-                      child: AnimatedContainer(
-                        duration: Duration(milliseconds: 200),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 11),
-                        color:
-                            tabController.index == index ? Colors.black : null,
-                        child: Text(
-                            '${widget.providers[index].runtimeType.toString()}',
-                            style: TextStyle(fontSize: 12)),
-                      ),
-                    ),
+                    (index) {
+                      final provider = widget.providers[index];
+                      return Tab(
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 200),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 11),
+                          color: tabController.index == index
+                              ? Colors.black
+                              : null,
+                          child: Text(
+                              '${provider.title ?? provider.runtimeType.toString()}',
+                              style: TextStyle(fontSize: 12)),
+                        ),
+                      );
+                    },
                   ).toList(),
                 ),
               ),
               preferredSize: Size(double.infinity, 36),
             ),
       bottomNavigationBar: widget.providers.length <= 1
-              ? null
-              : Container(
-                  height: 22,
-                  color: Colors.blue,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ? null
+          : Container(
+              height: 22,
+              color: Colors.blue,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AnimatedOpacity(
+                    duration: Duration(milliseconds: 300),
+                    opacity: tabController.index == 0 ? 0 : 1,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        child: Center(
+                            child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 4),
+                          child: Icon(
+                            Icons.chevron_left,
+                            size: 20,
+                          ),
+                        )),
+                        onTap: tabController.index == 0
+                            ? null
+                            : () => tabController.animateTo(tabController.index -1,
+                                duration: Duration(milliseconds: 700),
+                                curve: Curves.easeInOut),
+                      ),
+                    ),
+                  ),
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      AnimatedOpacity(
-                        duration: Duration(milliseconds: 300),
-                        opacity: tabController.index == 0 ? 0 : 1,
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            child: Center(
-                                child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 4),
-                              child: Icon(
-                                Icons.chevron_left,
-                                size: 20,
-                              ),
-                            )),
-                            onTap: tabController.index == 0
-                                ? null
-                                : () => tabController.animateTo(
-                                    tabController.index,
-                                    duration: Duration(milliseconds: 700),
-                                    curve: Curves.easeInOut),
-                          ),
-                        ),
+                      Text(
+                        '${tabController.index + 1}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 13),
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            '${tabController.index + 1}',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 13),
-                          ),
-                          Text(
-                            ' / ',
-                            style:
-                                TextStyle(color: Colors.white60, fontSize: 13),
-                          ),
-                          Text(
-                            '${widget.providers.length}',
-                            style: TextStyle(
-                                color: Colors.white60,
-                                fontWeight: FontWeight.w300,
-                                fontSize: 13),
-                          ),
-                        ],
+                      Text(
+                        ' / ',
+                        style: TextStyle(color: Colors.white60, fontSize: 13),
                       ),
-                      AnimatedOpacity(
-                        duration: Duration(milliseconds: 300),
-                        opacity: tabController.index == (widget.providers.length - 1)
-                            ? 0
-                            : 1,
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            child: Center(
-                                child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 4),
-                              child: Icon(
-                                Icons.chevron_right,
-                                size: 20,
-                              ),
-                            )),
-                            onTap: () =>
-                                tabController.index == tabController.length - 1
-                                    ? null
-                                    : tabController.animateTo(
-                                        tabController.index + 1,
-                                        duration: Duration(milliseconds: 700),
-                                        curve: Curves.easeInOut),
-                          ),
-                        ),
+                      Text(
+                        '${widget.providers.length}',
+                        style: TextStyle(
+                            color: Colors.white60,
+                            fontWeight: FontWeight.w300,
+                            fontSize: 13),
                       ),
                     ],
                   ),
-                ),
-      body: widget.child != null
-          ? Center(child: widget.child)
-          : TabBarView(
-              controller: tabController,
-              children: widget.providers
-                  .map(
-                    (e) => e,
-                  )
-                  .toList(),
+                  AnimatedOpacity(
+                    duration: Duration(milliseconds: 300),
+                    opacity:
+                        tabController.index == (widget.providers.length - 1)
+                            ? 0
+                            : 1,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        child: Center(
+                            child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 4),
+                          child: Icon(
+                            Icons.chevron_right,
+                            size: 20,
+                          ),
+                        )),
+                        onTap: () => tabController.index ==
+                                tabController.length - 1
+                            ? null
+                            : tabController.animateTo(tabController.index + 1,
+                                duration: Duration(milliseconds: 700),
+                                curve: Curves.easeInOut),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
+      body: widget.child != null
+              ? Center(child: widget.child)
+              : TabBarView(
+                physics: NeverScrollableScrollPhysics(),
+                  controller: tabController,
+                  children: widget.providers
+                      .map(
+                        (e) => e,
+                      )
+                      .toList(),
+                ),
     );
   }
 
@@ -299,4 +245,60 @@ String _stringify(Object exception) {
     // intentionally left empty.
   }
   return 'Error';
+}
+
+class StaticTargetErrorWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      padding: EdgeInsets.all(20),
+      alignment: Alignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Material(
+            child: IconButton(
+                icon: Icon(Icons.replay),
+                onPressed: () async {
+                  Timeline.timeSync("Doing Something", () {
+                    postEvent('Preview.hotRestart', <String, String>{});
+                  });
+                  final client = HttpClient();
+                  client.badCertificateCallback =
+                      (X509Certificate cert, String host, int port) => true;
+                  final request = await client.getUrl(
+                      Uri.parse('http://127.0.0.1:8084?hotrestart=true'));
+                  final response = await request.close();
+                }),
+          ),
+          Text(
+            'An error occurred while\nperforming hot reload',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+            ),
+            textDirection: TextDirection.ltr,
+          ),
+          SizedBox(height: 4),
+          Flexible(
+            child: Text(
+              'Unimplemented handling of missing static target',
+              style: TextStyle(color: Colors.white38),
+              textDirection: TextDirection.ltr,
+            ),
+          ),
+          SizedBox(height: 20),
+          Flexible(
+            child: Text(
+              'Use hot restart to solve the problem',
+              style: TextStyle(color: Colors.white),
+              textDirection: TextDirection.ltr,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

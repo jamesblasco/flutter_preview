@@ -11,23 +11,30 @@ import 'package:async/async.dart';
 
 import 'hot_restart_server.dart';
 
+import 'package:path/path.dart' as path;
+
 final featureSet = FeatureSet.fromEnableFlags([
   'extension-methods',
   //'non-nullable',
 ]);
+
+final PORT = 8084;
 
 Future<void> main() async {
   Stream<StreamResponse> cmdLine = stdin
       .transform(Utf8Decoder())
       .transform(LineSplitter())
       .map((event) => StreamResponse(stdin: event));
-  //final server = await HttpServer.bind('127.0.0.1', 8081);
-  //Stream<StreamResponse> requests =
-  //    server.map((event) => StreamResponse(request: event));
+  final server = await HttpServer.bind('127.0.0.1', PORT);
+  Stream<StreamResponse> requests =
+      server.map((event) => StreamResponse(request: event));
 
-  //ProcessSignal.sigint.watch().listen((_) async => await server.close());
+  ProcessSignal.sigint.watch().listen((_) async {
+    print('onClose');
+    await server.close();
+  });
 
-  final group = StreamGroup.merge([cmdLine]);
+  final group = StreamGroup.merge([cmdLine, requests]);
 
   await for (final response in group) {
     response.when(
@@ -35,14 +42,35 @@ Future<void> main() async {
         try {
           if (File(file).existsSync()) {
             generatePreview(file);
-            // request.response.write('Hello, world');
+            //request.response.write('Hello, world');
           }
         } catch (e) {
+          stdout.write('error');
           stdout.write(e);
           print(e);
         }
       },
       request: (request) async {
+        if (request.uri.path.startsWith('/asset/')) {
+          final File file =
+              new File(request.uri.path.replaceFirst('/asset/', ''));
+
+          if (file.existsSync()) {
+            final raw = await file.readAsBytes();
+
+            request.response.headers
+                .set('Content-Type', 'image/${path.extension(file.path)}');
+            request.response.headers.set('Content-Length', raw.length);
+            request.response.add(raw);
+            request.response.close();
+          } else {
+            request.response.statusCode = HttpStatus.notFound;
+            request.response.write('Not found');
+          }
+          await request.response.close();
+          return;
+        }
+
         final hotRestart = request.uri.queryParameters['hotrestart'] == 'true';
 
         if (hotRestart) {
@@ -117,14 +145,13 @@ class ExtractPreviewsVisitor extends RecursiveAstVisitor {
     final supportedMixin = 'Previewer';
 
     bool isExtended() {
-      final extendedClass = node.extendsClause.superclass.toString();
+      final extendedClass = node.extendsClause?.superclass?.toString();
       return supportedExtended == extendedClass;
     }
 
     bool isInMixin() {
       final item = node.withClause?.mixinTypes?.firstWhere(
         (c) {
-          print(c.toString());
           return supportedMixin == c.toString();
         },
         orElse: () => null,

@@ -10,6 +10,7 @@ export 'src/frame/frame.dart';
 export 'src/frame/frames.dart';
 export 'src/preview_page.dart';
 export 'src/resizable.dart';
+export 'src/assets/image.dart';
 
 class Preview extends StatelessWidget {
   final Widget child;
@@ -18,6 +19,7 @@ class Preview extends StatelessWidget {
   final BoxConstraints constraints;
   final FrameData frame;
   final ThemeData theme;
+  final UpdateMode mode;
 
   const Preview({
     Key key,
@@ -27,6 +29,7 @@ class Preview extends StatelessWidget {
     this.constraints,
     this.frame,
     this.theme,
+    this.mode = UpdateMode.hotRestart,
   }) : super(key: key);
 
   @override
@@ -46,12 +49,13 @@ class Preview extends StatelessWidget {
   }
 }
 
-
 mixin Previewer on StatelessWidget {
   Widget build(BuildContext context);
+
+  String get title => null;
 }
 
-abstract class PreviewProvider extends StatelessWidget with Previewer{
+abstract class PreviewProvider extends StatelessWidget with Previewer {
   List<Preview> get previews;
 
   Widget build(BuildContext context) {
@@ -62,7 +66,10 @@ abstract class PreviewProvider extends StatelessWidget with Previewer{
           padding: EdgeInsets.all(20),
           child: Column(
             children: previews
-                .map<Widget>((e) => _Preview(child: e))
+                .map<Widget>((e) => _Preview(
+                      child: e,
+                      updateMode: e.mode,
+                    ))
                 .addInBetween(SizedBox(height: 20))
                 .toList(),
           ),
@@ -74,24 +81,29 @@ abstract class PreviewProvider extends StatelessWidget with Previewer{
 
 abstract class ResizablePreviewProvider extends StatelessWidget with Previewer {
   Preview get preview;
- 
+
   @override
   Widget build(BuildContext context) {
     return _Preview(
       resizable: true,
       child: preview,
+      updateMode: preview.mode
     );
   }
 }
 
+enum UpdateMode { hotReload, hotRestart }
+
 class _Preview extends StatefulWidget {
   final Widget child;
   final bool resizable;
+  final UpdateMode updateMode;
 
   const _Preview({
     Key key,
     @required this.child,
     this.resizable = false,
+    this.updateMode = UpdateMode.hotRestart,
   }) : super(key: key);
 
   @override
@@ -103,8 +115,8 @@ class _PreviewState extends State<_Preview> {
 
   @override
   void initState() {
-    
     controller = PersistController();
+    controller.isHotRestart = widget.updateMode == UpdateMode.hotRestart;
     super.initState();
   }
 
@@ -116,7 +128,7 @@ class _PreviewState extends State<_Preview> {
       return OnHover(
           child: widget.child,
           builder: (context, hover, child) {
-            final shouldDisplay = hover | !controller.isLive;
+            final shouldDisplay = hover | !controller.isHotRestart;
             return ResizableWidget(
               child: preview,
               trailing: AnimatedOpacity(
@@ -136,7 +148,7 @@ class _PreviewState extends State<_Preview> {
     return OnHover(
       child: widget.child,
       builder: (context, hover, child) {
-        final shouldDisplay = hover | !controller.isLive;
+        final shouldDisplay = hover | !controller.isHotRestart;
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -159,6 +171,15 @@ class _PreviewState extends State<_Preview> {
         );
       },
     );
+  }
+
+  @override
+  void didUpdateWidget(_Preview oldWidget) {
+    if (oldWidget.updateMode != widget.updateMode) {
+      final mode = widget.updateMode ?? UpdateMode.hotRestart;
+      controller.isHotRestart = mode == UpdateMode.hotRestart;
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

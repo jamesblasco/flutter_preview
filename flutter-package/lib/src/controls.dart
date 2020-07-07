@@ -32,7 +32,7 @@ class _PreviewControlsState extends State<PreviewControls> {
       mainAxisAlignment: MainAxisAlignment.end,
        crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (!controller.isLive)
+        if (!controller.isHotRestart)
           AnimatedContainer(
             height: 20,
             decoration: BoxDecoration(
@@ -55,19 +55,19 @@ class _PreviewControlsState extends State<PreviewControls> {
         AnimatedContainer(
           height: 20,
           decoration: BoxDecoration(
-              color: controller.isLive ? Colors.blue : Colors.grey,
+              color: controller.isHotRestart ? Colors.blue : Colors.grey,
               shape: BoxShape.circle),
           duration: Duration(milliseconds: 200),
           child: IconButton(
             splashRadius: 12,
-            tooltip: controller.isLive
+            tooltip: controller.isHotRestart
                 ? 'Disable Auto Hot Restart'
                 : 'Enable Auto Hot Restart',
             iconSize: 12,
             padding: EdgeInsets.all(2),
             icon: Icon(Icons.play_arrow),
             onPressed: () =>
-                setState(() => controller.isLive = !controller.isLive),
+                setState(() => controller.isHotRestart = !controller.isHotRestart),
           ),
         )
       ],

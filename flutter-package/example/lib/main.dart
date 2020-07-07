@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:preview/preview.dart';
@@ -36,8 +38,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
-
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -58,7 +58,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
+  final directory = Directory.current;
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -77,34 +77,39 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Preview ${Frame().runtimeType}'),
+        title: Text('Preview ${Frame().runtimeType}'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  runAlignment: WrapAlignment.spaceBetween,
-                  alignment: WrapAlignment.spaceBetween,
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: colors
-                      .asMap()
-                      .entries
-                      .map((e) => c.Chip(title: 'Tag ${e.key}', color: e.value))
-                      .toList()),
+        child: Scrollbar(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      runAlignment: WrapAlignment.spaceBetween,
+                      alignment: WrapAlignment.spaceBetween,
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: colors
+                          .asMap()
+                          .entries
+                          .map((e) =>
+                              c.Chip(title: 'Tag ${e.key}', color: e.value))
+                          .toList()),
+                ),
+                Text(
+                  'You have pushed the button this many times:',
+                ),
+                Text(
+                  '$_counter',
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+              ],
             ),
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -116,9 +121,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+
 class IPhoneX extends PreviewProvider {
+   @override
+  String get title => 'iPhone X';
   @override
   List<Preview> get previews => [
+    
         Preview(
           key: Key('preview'),
           frame: Frames.iphoneX,
@@ -127,7 +136,11 @@ class IPhoneX extends PreviewProvider {
       ];
 }
 
+
+
 class IPad extends PreviewProvider {
+  @override
+  String get title => 'iPad  Pro';
   @override
   List<Preview> get previews => [
         Preview(
@@ -137,13 +150,19 @@ class IPad extends PreviewProvider {
       ];
 }
 
-class IPhone8 extends PreviewProvider {
+
+class AllPreview extends PreviewProvider {
   @override
-  List<Preview> get previews => [
-        Preview(
-          height: 600,
-          frame: Frames.iphone8,
+  String get title => 'All';
+
+  @override
+  List<Preview> get previews => Frames.values
+      .map(
+        (e) => Preview(
+          key: Key('preview'),
+          frame: e,
           child: MyApp(),
         ),
-      ];
+      )
+      .toList();
 }

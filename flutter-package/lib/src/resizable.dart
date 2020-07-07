@@ -6,8 +6,11 @@ class ResizableWidget extends StatefulWidget {
   final Size initialSize;
   final Widget trailing;
 
-  ResizableWidget(
-      {this.child, this.initialSize = const Size(200, 200), this.trailing});
+  ResizableWidget({
+    this.child,
+    this.initialSize = const Size(200, 200),
+    this.trailing,
+  });
 
   final Widget child;
   @override
@@ -82,17 +85,18 @@ class _ResizableWidgetState extends State<ResizableWidget> {
                 child: AnimatedOpacity(
                   duration: Duration(milliseconds: 200),
                   opacity: hover ? 1 : 0,
-                  child:ManipulatingBall(
-                  onDrag: (dx, dy) {
-                    var newHeight = height - dy;
-                    var newWidth = width - dx;
+                  child: ManipulatingBall(
+                    onDrag: (dx, dy) {
+                      var newHeight = height - dy;
+                      var newWidth = width - dx;
 
-                    setState(() {
-                      height = newHeight > 0 ? newHeight : 0;
-                      width = newWidth > 0 ? newWidth : 0;
-                    });
-                  },
-                ),),
+                      setState(() {
+                        height = newHeight > 0 ? newHeight : 0;
+                        width = newWidth > 0 ? newWidth : 0;
+                      });
+                    },
+                  ),
+                ),
               ),
               // top middle
               Positioned(
@@ -101,15 +105,16 @@ class _ResizableWidgetState extends State<ResizableWidget> {
                 child: AnimatedOpacity(
                   duration: Duration(milliseconds: 200),
                   opacity: hover ? 1 : 0,
-                  child:ManipulatingBall(
-                  onDrag: (dx, dy) {
-                    var newHeight = height - dy;
+                  child: ManipulatingBall(
+                    onDrag: (dx, dy) {
+                      var newHeight = height - dy;
 
-                    setState(() {
-                      height = newHeight > 0 ? newHeight : 0;
-                    });
-                  },
-                ),),
+                      setState(() {
+                        height = newHeight > 0 ? newHeight : 0;
+                      });
+                    },
+                  ),
+                ),
               ),
               // top right
               Positioned(
@@ -119,16 +124,17 @@ class _ResizableWidgetState extends State<ResizableWidget> {
                   duration: Duration(milliseconds: 200),
                   opacity: hover ? 1 : 0,
                   child: ManipulatingBall(
-                  onDrag: (dx, dy) {
-                    var newHeight = height - dy;
-                    var newWidth = width + dx;
+                    onDrag: (dx, dy) {
+                      var newHeight = height - dy;
+                      var newWidth = width + dx;
 
-                    setState(() {
-                      height = newHeight > 0 ? newHeight : 0;
-                      width = newWidth > 0 ? newWidth : 0;
-                    });
-                  },
-                ),),
+                      setState(() {
+                        height = newHeight > 0 ? newHeight : 0;
+                        width = newWidth > 0 ? newWidth : 0;
+                      });
+                    },
+                  ),
+                ),
               ),
               // center right
               Positioned(
@@ -138,33 +144,35 @@ class _ResizableWidgetState extends State<ResizableWidget> {
                   duration: Duration(milliseconds: 200),
                   opacity: hover ? 1 : 0,
                   child: ManipulatingBall(
-                  onDrag: (dx, dy) {
-                    var newWidth = width + dx;
+                    onDrag: (dx, dy) {
+                      var newWidth = width + dx;
 
-                    setState(() {
-                      width = newWidth > 0 ? newWidth : 0;
-                    });
-                  },
-                ),),
+                      setState(() {
+                        width = newWidth > 0 ? newWidth : 0;
+                      });
+                    },
+                  ),
+                ),
               ),
               // bottom right
               Positioned(
                 top: y + height - _kballDiameter / 2,
                 left: x + width - _kballDiameter / 2,
-                child:AnimatedOpacity(
+                child: AnimatedOpacity(
                   duration: Duration(milliseconds: 200),
                   opacity: hover ? 1 : 0,
                   child: ManipulatingBall(
-                  onDrag: (dx, dy) {
-                    var newHeight = height + dy;
-                    var newWidth = width + dx;
+                    onDrag: (dx, dy) {
+                      var newHeight = height + dy;
+                      var newWidth = width + dx;
 
-                    setState(() {
-                      height = newHeight > 0 ? newHeight : 0;
-                      width = newWidth > 0 ? newWidth : 0;
-                    });
-                  },
-                ),),
+                      setState(() {
+                        height = newHeight > 0 ? newHeight : 0;
+                        width = newWidth > 0 ? newWidth : 0;
+                      });
+                    },
+                  ),
+                ),
               ),
               // bottom center
               Positioned(
@@ -174,14 +182,15 @@ class _ResizableWidgetState extends State<ResizableWidget> {
                   duration: Duration(milliseconds: 200),
                   opacity: hover ? 1 : 0,
                   child: ManipulatingBall(
-                  onDrag: (dx, dy) {
-                    var newHeight = height + dy;
+                    onDrag: (dx, dy) {
+                      var newHeight = height + dy;
 
-                    setState(() {
-                      height = newHeight > 0 ? newHeight : 0;
-                    });
-                  },
-                ),),
+                      setState(() {
+                        height = newHeight > 0 ? newHeight : 0;
+                      });
+                    },
+                  ),
+                ),
               ),
               // bottom left
               Positioned(
@@ -191,16 +200,17 @@ class _ResizableWidgetState extends State<ResizableWidget> {
                   duration: Duration(milliseconds: 200),
                   opacity: hover ? 1 : 0,
                   child: ManipulatingBall(
-                  onDrag: (dx, dy) {
-                    var newHeight = height + dy;
-                    var newWidth = width - dx;
+                    onDrag: (dx, dy) {
+                      var newHeight = height + dy;
+                      var newWidth = width - dx;
 
-                    setState(() {
-                      height = newHeight > 0 ? newHeight : 0;
-                      width = newWidth > 0 ? newWidth : 0;
-                    });
-                  },
-                ),),
+                      setState(() {
+                        height = newHeight > 0 ? newHeight : 0;
+                        width = newWidth > 0 ? newWidth : 0;
+                      });
+                    },
+                  ),
+                ),
               ),
               //left center
               Positioned(
@@ -210,13 +220,14 @@ class _ResizableWidgetState extends State<ResizableWidget> {
                   duration: Duration(milliseconds: 200),
                   opacity: hover ? 1 : 0,
                   child: ManipulatingBall(
-                  onDrag: (dx, dy) {
-                    final newWidth = width - dx;
-                    setState(() {
-                      width = newWidth > 0 ? newWidth : 0;
-                    });
-                  },
-                ),),
+                    onDrag: (dx, dy) {
+                      final newWidth = width - dx;
+                      setState(() {
+                        width = newWidth > 0 ? newWidth : 0;
+                      });
+                    },
+                  ),
+                ),
               ),
 
               // trailing

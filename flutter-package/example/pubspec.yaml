@@ -14,6 +14,7 @@ dependencies:
    
   palette_generator: ^0.2.3 
   random_color: ^1.0.5 
+  flutter_staggered_grid_view: ^0.3.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -27,6 +28,7 @@ dev_dependencies:
   device_preview: ^0.4.5
   flutter_storyboard: ^0.1.6
   flutter_material_showcase: ^1.0.1
+
        
   
 
@@ -41,12 +43,6 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-
-
-  assets:
-    - preview_assets/cover1.jpg
-    - preview_assets/cover2.jpg
-    - preview_assets/cover3.jpg
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

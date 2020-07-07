@@ -14,6 +14,7 @@ class _PreviewApp extends StatelessWidget {
       providers: () => [
         WidgetPreview(), 
         Resizable(), 
+        StaggeredCard(), 
         
       ],
     );
