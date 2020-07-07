@@ -29,6 +29,12 @@
   
   - Click the button to launch Flutter Preview
   
+  - If a devices is not active yet, it will ask you to select the device where you want to run Flutter Preview.
+    The available devices are:
+      - stable: Android, iOS simulators or real devices,
+      - beta: web, android and ios
+      - dev/master: macos, windows, web, android, ios and linux
+  
 ### Adding a preview
 
   A vscode snippet is availabe for creating a preview, just type `preview` and it will appear.
