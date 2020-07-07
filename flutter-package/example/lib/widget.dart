@@ -30,7 +30,7 @@ class ExamplePreview extends PreviewProvider {
           height: 40,
           child: Example(),
         ),
-           Preview(
+        Preview(
           width: 40,
           height: 40,
           child: Example(),

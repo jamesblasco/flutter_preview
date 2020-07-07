@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class PersistController extends ChangeNotifier {
   Key __key = UniqueKey();
-  Key get _key => isHotRestart ?  __key = UniqueKey() : __key;
+  Key get _key => isHotRestart ? __key = UniqueKey() : __key;
 
   bool _isHotRestart = true;
   bool get isHotRestart => _isHotRestart;
@@ -19,8 +19,6 @@ class PersistController extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-
 
 class Persist extends StatefulWidget {
   final Widget child;
@@ -45,9 +43,11 @@ class _PersistState extends State<Persist> {
   @override
   Widget build(BuildContext context) {
     return KeyedSubtree(
-      child: Builder(builder: (context) => widget.child,
-      key: controller._key,
-    ),);
+      child: Builder(
+        builder: (context) => widget.child,
+        key: controller._key,
+      ),
+    );
   }
 
   @override

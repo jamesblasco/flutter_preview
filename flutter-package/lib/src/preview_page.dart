@@ -1,11 +1,11 @@
 import 'dart:developer';
-import 'dart:io';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:preview/preview.dart';
-import 'package:window_size/window_size.dart';
-import 'dart:convert';
+//import 'package:window_size/window_size.dart';
+
 class PreviewPage extends StatelessWidget {
   final List<Previewer> Function() providers;
   final String path;
@@ -77,10 +77,11 @@ class _ProviderPageViewState extends State<_ProviderPageView>
     tabController = TabController(
         initialIndex: 0, length: widget.providers.length, vsync: this);
     tabController.addListener(update);
-    if (widget.path == null)
+    // This Flutter package is not ready yet
+    /* if (widget.path == null)
       setWindowTitle('Preview');
     else
-      setWindowTitle('Preview - ${widget.path}');
+      setWindowTitle('Preview - ${widget.path}'); */
     super.initState();
   }
 
@@ -150,7 +151,8 @@ class _ProviderPageViewState extends State<_ProviderPageView>
                         )),
                         onTap: tabController.index == 0
                             ? null
-                            : () => tabController.animateTo(tabController.index -1,
+                            : () => tabController.animateTo(
+                                tabController.index - 1,
                                 duration: Duration(milliseconds: 700),
                                 curve: Curves.easeInOut),
                       ),
@@ -207,16 +209,16 @@ class _ProviderPageViewState extends State<_ProviderPageView>
               ),
             ),
       body: widget.child != null
-              ? Center(child: widget.child)
-              : TabBarView(
-                physics: NeverScrollableScrollPhysics(),
-                  controller: tabController,
-                  children: widget.providers
-                      .map(
-                        (e) => e,
-                      )
-                      .toList(),
-                ),
+          ? Center(child: widget.child)
+          : TabBarView(
+              physics: NeverScrollableScrollPhysics(),
+              controller: tabController,
+              children: widget.providers
+                  .map(
+                    (e) => e,
+                  )
+                  .toList(),
+            ),
     );
   }
 
@@ -265,12 +267,8 @@ class StaticTargetErrorWidget extends StatelessWidget {
                   Timeline.timeSync("Doing Something", () {
                     postEvent('Preview.hotRestart', <String, String>{});
                   });
-                  final client = HttpClient();
-                  client.badCertificateCallback =
-                      (X509Certificate cert, String host, int port) => true;
-                  final request = await client.getUrl(
-                      Uri.parse('http://127.0.0.1:8084?hotrestart=true'));
-                  final response = await request.close();
+
+                  await http.post('http://127.0.0.1:8084?hotrestart=true');
                 }),
           ),
           Text(

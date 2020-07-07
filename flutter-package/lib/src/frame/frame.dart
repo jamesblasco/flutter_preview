@@ -107,7 +107,6 @@ class Frame extends StatelessWidget {
         screenRadius: frame.screenRadius,
         sideButtons: frame.sideButtons,
         notch: frame.notch,
-        
       ),
     );
   }

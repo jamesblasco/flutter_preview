@@ -113,13 +113,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.5"
-  equatable:
-    dependency: transitive
-    description:
-      name: equatable
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.0"
   fake_async:
     dependency: transitive
     description:
@@ -138,7 +131,7 @@ packages:
       name: flutter_material_showcase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "1.1.0"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:
@@ -281,7 +274,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.1+7"
+    version: "0.0.5+1"
   pub_semver:
     dependency: transitive
     description:
@@ -399,15 +392,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.7+15"
-  window_size:
-    dependency: transitive
-    description:
-      path: "plugins/window_size/"
-      ref: HEAD
-      resolved-ref: "4df20370025fd8c84adcba605e7a7fee8760687b"
-      url: "https://github.com/google/flutter-desktop-embedding"
-    source: git
-    version: "0.1.0"
   yaml:
     dependency: transitive
     description:

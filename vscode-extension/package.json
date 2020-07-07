@@ -3,10 +3,16 @@
 	"displayName": "Flutter Preview",
 	"description": "Display a preview of your widget while building them",
 	"publisher": "jamesblasco",
-	"version": "0.0.5",
+	"version": "0.0.6",
+	"icon": "images/icon.png",
 	"engines": {
 		"vscode": "^1.46.0"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/jamesblasco/flutter_preview.git"
+	},
+	"homepage": "https://github.com/jamesblasco/flutter_preview/blob/master/README.md",
 	"preview": true,
 	"categories": [
 		"Other",

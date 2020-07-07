@@ -11,7 +11,7 @@
 ///      fonts:
 ///       - asset: fonts/PreviewIcons.ttf
 ///
-/// 
+///
 ///
 import 'package:flutter/widgets.dart';
 
@@ -21,5 +21,6 @@ class PreviewIcons {
   static const _kFontFam = 'PreviewIcons';
   static const _kFontPkg = 'preview';
 
-  static const IconData lightning_bolt = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData lightning_bolt =
+      IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

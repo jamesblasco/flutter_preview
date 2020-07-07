@@ -121,13 +121,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-
 class IPhoneX extends PreviewProvider {
-   @override
+  @override
   String get title => 'iPhone X';
   @override
   List<Preview> get previews => [
-    
         Preview(
           key: Key('preview'),
           frame: Frames.iphoneX,
@@ -135,8 +133,6 @@ class IPhoneX extends PreviewProvider {
         ),
       ];
 }
-
-
 
 class IPad extends PreviewProvider {
   @override
@@ -149,7 +145,6 @@ class IPad extends PreviewProvider {
         ),
       ];
 }
-
 
 class AllPreview extends PreviewProvider {
   @override

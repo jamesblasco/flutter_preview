@@ -84,11 +84,7 @@ abstract class ResizablePreviewProvider extends StatelessWidget with Previewer {
 
   @override
   Widget build(BuildContext context) {
-    return _Preview(
-      resizable: true,
-      child: preview,
-      updateMode: preview.mode
-    );
+    return _Preview(resizable: true, child: preview, updateMode: preview.mode);
   }
 }
 

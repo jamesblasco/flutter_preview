@@ -2,7 +2,7 @@
 # See https://dart.dev/tools/pub/glossary#lockfile
 packages:
   _fe_analyzer_shared:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: _fe_analyzer_shared
       url: "https://pub.dartlang.org"
@@ -99,13 +99,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.2"
-  equatable:
-    dependency: "direct main"
-    description:
-      name: equatable
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.0"
   fake_async:
     dependency: transitive
     description:
@@ -144,6 +137,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.14.0+3"
+  http:
+    dependency: "direct main"
+    description:
+      name: http
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.12.1"
+  http_parser:
+    dependency: transitive
+    description:
+      name: http_parser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.4"
   js:
     dependency: transitive
     description:
@@ -289,15 +296,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.7+15"
-  window_size:
-    dependency: "direct main"
-    description:
-      path: "plugins/window_size/"
-      ref: HEAD
-      resolved-ref: "4df20370025fd8c84adcba605e7a7fee8760687b"
-      url: "https://github.com/google/flutter-desktop-embedding"
-    source: git
-    version: "0.1.0"
   yaml:
     dependency: transitive
     description:

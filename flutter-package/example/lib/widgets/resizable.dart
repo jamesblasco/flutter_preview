@@ -34,7 +34,6 @@ class _DemoState extends State<Demo> {
   2. Use GestureDetector to get new variables of sizes
   3. Refresh the main container size.''',
           overflow: TextOverflow.fade,
-      
           softWrap: true,
           style: TextStyle(fontSize: 24),
         ),

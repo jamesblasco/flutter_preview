@@ -9,8 +9,6 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:async/async.dart';
 
-import 'hot_restart_server.dart';
-
 import 'package:path/path.dart' as path;
 
 final featureSet = FeatureSet.fromEnableFlags([
@@ -18,14 +16,14 @@ final featureSet = FeatureSet.fromEnableFlags([
   //'non-nullable',
 ]);
 
-final PORT = 8084;
+final port = 8084;
 
 Future<void> main() async {
   Stream<StreamResponse> cmdLine = stdin
       .transform(Utf8Decoder())
       .transform(LineSplitter())
       .map((event) => StreamResponse(stdin: event));
-  final server = await HttpServer.bind('127.0.0.1', PORT);
+  final server = await HttpServer.bind('127.0.0.1', port);
   Stream<StreamResponse> requests =
       server.map((event) => StreamResponse(request: event));
 

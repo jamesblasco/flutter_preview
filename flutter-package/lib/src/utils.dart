@@ -1,7 +1,3 @@
-
-
-
-
 extension IterableExtension<T> on Iterable<T> {
   Iterable<T> addInBetween(T item) sync* {
     if (length <= 1) {

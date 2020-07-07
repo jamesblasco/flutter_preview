@@ -1,5 +1,5 @@
 <p align="center">
-  <img   height="120px" src="https://github.com/jamesblasco/flutter_preview/blob/master/flutter_preview.jpg?raw=true" />
+  <img   height="120px" src="https://github.com/jamesblasco/flutter_preview/blob/master/screenshots/flutter_preview.jpg?raw=true" />
 </p>
 
 
@@ -8,7 +8,7 @@
           Create samples of you widgets and preview them in real time
     <br/>
     <br/>
-  <img   width="640px" src="https://github.com/jamesblasco/flutter_preview/blob/master/flutter_preview_header.png?raw=true" />
+  <img   width="640px" src="https://github.com/jamesblasco/flutter_preview/blob/master/screenshots/flutter_preview_header.png?raw=true" />
 
 </p>
 
@@ -23,7 +23,7 @@
 
 ### Run the preview
 
-  <img align="right"  height="200px" src="https://github.com/jamesblasco/flutter_preview/blob/master/preview_button.jpg?raw=true" />
+  <img align="right"  height="200px" src="https://github.com/jamesblasco/flutter_preview/blob/master/screenshots/preview_button.jpg?raw=true" />
 
   - Open a dart file in vscode and the preview button will appear
   
@@ -150,7 +150,7 @@ class DevicePreviewProvider extends StatelessWidget with Previewer {
 
 </td>
 
-<td> <img align="right"  height="300" width="383" src="https://github.com/jamesblasco/flutter_preview/blob/master/custom_preview.png?raw=true" />  </td>
+<td> <img align="right"  height="300" width="383" src="https://github.com/jamesblasco/flutter_preview/blob/master/screenshots/custom_preview.png?raw=true" />  </td>
 </tr>
 
 </table>

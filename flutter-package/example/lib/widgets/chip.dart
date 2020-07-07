@@ -19,7 +19,6 @@ class Chip extends StatelessWidget {
     final padding = EdgeInsets.symmetric(horizontal: 20, vertical: 4);
     final radius = BorderRadius.circular(4);
     if (outline) {
-      
       return Container(
         decoration: BoxDecoration(
             border: Border.all(color: _color), borderRadius: radius),
@@ -44,10 +43,7 @@ class Chip extends StatelessWidget {
   }
 }
 
-
-
 class WidgetPreview extends PreviewProvider {
-
   @override
   List<Preview> get previews {
     return [

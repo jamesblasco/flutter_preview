@@ -1,7 +1,3 @@
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:preview/src/persist.dart';
 
@@ -30,7 +26,7 @@ class _PreviewControlsState extends State<PreviewControls> {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
-       crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (!controller.isHotRestart)
           AnimatedContainer(
@@ -41,7 +37,7 @@ class _PreviewControlsState extends State<PreviewControls> {
             ),
             duration: Duration(milliseconds: 200),
             child: IconButton(
-                splashRadius: 12,
+                // splashRadius: 12,
                 tooltip: 'Hot restart',
                 iconSize: 12,
                 padding: EdgeInsets.all(2),
@@ -59,15 +55,15 @@ class _PreviewControlsState extends State<PreviewControls> {
               shape: BoxShape.circle),
           duration: Duration(milliseconds: 200),
           child: IconButton(
-            splashRadius: 12,
+            // splashRadius: 12, Not on master yet
             tooltip: controller.isHotRestart
                 ? 'Disable Auto Hot Restart'
                 : 'Enable Auto Hot Restart',
             iconSize: 12,
             padding: EdgeInsets.all(2),
             icon: Icon(Icons.play_arrow),
-            onPressed: () =>
-                setState(() => controller.isHotRestart = !controller.isHotRestart),
+            onPressed: () => setState(
+                () => controller.isHotRestart = !controller.isHotRestart),
           ),
         )
       ],

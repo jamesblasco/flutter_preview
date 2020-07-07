@@ -204,8 +204,6 @@ class NormalPreview extends PreviewProvider {
       ];
 }
 
-
-
 class NormalPreview2 extends PreviewProvider {
   @override
   List<Preview> get previews => [
