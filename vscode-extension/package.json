@@ -3,13 +3,14 @@
 	"displayName": "Flutter Preview",
 	"description": "Display a preview of your widget while building them",
 	"publisher": "jamesblasco",
-	"version": "0.0.2",
+	"version": "0.0.5",
 	"engines": {
 		"vscode": "^1.46.0"
 	},
 	"preview": true,
 	"categories": [
-		"Other", "Snippets"
+		"Other",
+		"Snippets"
 	],
 	"activationEvents": [
 		"onLanguage:dart",
@@ -81,5 +82,8 @@
 	},
 	"extensionPack": [
 		"dart-code.flutter"
-	]
+	],
+	"dependencies": {
+		"tree-kill": "^1.2.2"
+	}
 }

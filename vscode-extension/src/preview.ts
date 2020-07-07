@@ -1,8 +1,9 @@
 
 
 import * as vscode from 'vscode';
-import { ChildProcess } from 'child_process';
 
+import { ChildProcess } from 'child_process';
+const kill  = require('tree-kill');
 const spawn = require('child_process').spawn;
 
 const isActiveContext = 'flutter_preview.isActive';
@@ -21,7 +22,6 @@ export class PreviewService {
         this.path = path;
     }
 
-
     async start() {
         if (this.isActive && vscode.debug.activeDebugSession?.name === 'Flutter Preview') {
             vscode.window.showInformationMessage('Flutter preview is already running');
@@ -29,18 +29,18 @@ export class PreviewService {
         }
         this.isActive = true;
         vscode.commands.executeCommand("setContext", isActiveContext, true);
-        await this.launchAnalyticsProccess();
+        this.launchDartPreviewProccess();
         await this.launchDebugSession();
-        let disp = vscode.workspace.onDidSaveTextDocument((e) => { this.saveTextEditor(e); });
+        let disp = vscode.workspace.onDidSaveTextDocument((e) => { this.onDidSaveTextEditor(e); });
         let disp2 = vscode.window.onDidChangeActiveTextEditor((e) => {
 
-            this.updateActiveTextEditor();
+            this.onDidUpdateActiveTextEditor();
         });
         this.disposables.push(disp, disp2);
-        this.updateActiveTextEditor();
+        this.onDidUpdateActiveTextEditor();
     }
 
-    launchAnalyticsProccess() {
+    launchDartPreviewProccess() {
         try {
             this.process = spawn('flutter', [
                 'pub',
@@ -109,9 +109,12 @@ export class PreviewService {
 
 
     cancel() {
-        this.isActive = false;
         console.log('cancel session');
-        this.process?.kill();
+        
+        this.isActive = false;
+        if (this.process !== undefined) {
+            kill(this.process.pid, 'SIGKILL');
+        }
         this.process = undefined;
         this.disposables.forEach((s) => s.dispose());
         vscode.commands.executeCommand("setContext", isActiveContext, false);
@@ -120,16 +123,15 @@ export class PreviewService {
 
 
 
-    saveTextEditor(document: vscode.TextDocument) {
-        console.log(document.uri === this.currentDocument);
+    onDidSaveTextEditor(document: vscode.TextDocument) {
         if (document.languageId === "dart" && document.uri === this.currentDocument) {
-            this.updateActiveTextEditor();
+            this.onDidUpdateActiveTextEditor();
         }
     };
 
 
 
-    updateActiveTextEditor() {
+    onDidUpdateActiveTextEditor() {
         const editor = vscode.window.activeTextEditor;
         this.currentDocument = editor?.document?.uri;
         const path = this.currentDocument!.toString().split(":")[1].replace(this.path + '/', '');
@@ -137,10 +139,6 @@ export class PreviewService {
     };
 
     dispose() {
-        this.disposables.forEach((s) => s.dispose());
+        this.cancel();
     }
-
-
-
-
 }
