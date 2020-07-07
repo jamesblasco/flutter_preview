@@ -156,7 +156,34 @@ class DevicePreviewProvider extends StatelessWidget with Previewer {
 </table>
 
 
-###  Something is not working as expected?
+###  Using sample assets
+
+Adding sample assets to your flutter can increase the app without no need. 
+
+For images, you can NetworkImage as before.
+
+But if you want to use local images, don't add it to your flutter project! 
+
+You can use PreviewImage instead.
+
+```dart
+//DON'T
+AssetImage('images/dart.png')
+
+//DO
+PreviewImage('images/dart.png')
+```
+
+<pre><code># pubspec.yaml
+
+assets:
+  <s>images/dart.png</s>
+
+</code></pre>
+
+Other assets will be supported soon
+
+##  Something is not working as expected?
 
 Create a [new issue](https://github.com/jamesblasco/flutter_preview/issues/new) and I will take it a look
 
