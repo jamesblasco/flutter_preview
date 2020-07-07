@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:preview/preview.dart';
+import 'package:preview/src/utils.dart';
 //import 'package:window_size/window_size.dart';
 
 class PreviewPage extends StatelessWidget {
@@ -11,12 +12,13 @@ class PreviewPage extends StatelessWidget {
   final String path;
   final Widget child;
 
-  const PreviewPage({
+  PreviewPage({
     Key key,
     List<Previewer> Function() providers,
     this.child,
     this.path,
-  })  : this.providers = providers,
+  })  : assert(debugAssertPreviewModeRequired(runtimeType)),
+        this.providers = providers,
         super(key: key);
 
   @override

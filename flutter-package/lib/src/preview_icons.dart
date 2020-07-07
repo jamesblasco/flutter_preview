@@ -14,9 +14,10 @@
 ///
 ///
 import 'package:flutter/widgets.dart';
+import 'package:preview/src/utils.dart';
 
 class PreviewIcons {
-  PreviewIcons._();
+  PreviewIcons._() : assert(debugAssertPreviewModeRequired(runtimeType));
 
   static const _kFontFam = 'PreviewIcons';
   static const _kFontPkg = 'preview';
