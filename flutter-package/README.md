@@ -33,11 +33,11 @@
 
   A vscode snippet is availabe for creating a preview, just type `preview` and it will appear.
   
-  - Create a new class that extends FlutterProvider
+  - Create a new class that extends `PreviewProvider`
   
   ```dart
   
-  class MyPreview extends FlutterProvider {
+  class MyPreview extends PreviewProvider {
   
     List<Preview> get previews {
       return [
