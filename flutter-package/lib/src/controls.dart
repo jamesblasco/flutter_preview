@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:preview/src/persist.dart';
+import 'package:preview/src/utils.dart';
 
 import 'preview_icons.dart';
 
 class PreviewControls extends StatefulWidget {
   final PersistController controller;
 
-  const PreviewControls({Key key, this.controller}) : super(key: key);
+  PreviewControls({Key key, this.controller})
+      : assert(debugAssertPreviewModeRequired(runtimeType)),
+        super(key: key);
   @override
   _PreviewControlsState createState() => _PreviewControlsState();
 }

@@ -7,14 +7,14 @@ packages:
       name: _fe_analyzer_shared
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0"
+    version: "5.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.39.7"
+    version: "0.39.12"
   args:
     dependency: transitive
     description:
@@ -274,7 +274,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.5+1"
+    version: "0.0.5+2"
   pub_semver:
     dependency: transitive
     description:

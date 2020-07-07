@@ -21,7 +21,7 @@ class Preview extends StatelessWidget {
   final ThemeData theme;
   final UpdateMode mode;
 
-  const Preview({
+  Preview({
     Key key,
     @required this.child,
     this.height,
@@ -30,7 +30,8 @@ class Preview extends StatelessWidget {
     this.frame,
     this.theme,
     this.mode = UpdateMode.hotRestart,
-  }) : super(key: key);
+  })  : assert(debugAssertPreviewModeRequired(runtimeType)),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +59,8 @@ mixin Previewer on StatelessWidget {
 abstract class PreviewProvider extends StatelessWidget with Previewer {
   List<Preview> get previews;
 
+  PreviewProvider() : assert(debugAssertPreviewModeRequired(runtimeType));
+
   Widget build(BuildContext context) {
     return Scrollbar(
       child: Center(
@@ -81,6 +84,9 @@ abstract class PreviewProvider extends StatelessWidget with Previewer {
 
 abstract class ResizablePreviewProvider extends StatelessWidget with Previewer {
   Preview get preview;
+
+  ResizablePreviewProvider()
+      : assert(debugAssertPreviewModeRequired(runtimeType));
 
   @override
   Widget build(BuildContext context) {
