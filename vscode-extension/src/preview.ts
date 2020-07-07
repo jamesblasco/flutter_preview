@@ -87,11 +87,12 @@ export class PreviewService {
             type: "dart",
             name: "Flutter Preview",
             request: "launch",
-            deviceId: "macOS",
+           // deviceId: "macOS",
             cwd: "",
             internalConsoleOptions: "neverOpen",
             args: [
-                "--target=lib/main.preview.dart"
+                "--target=lib/main.preview.dart",
+                "--dart-define=flutter.preview=true"
             ],
         };
 

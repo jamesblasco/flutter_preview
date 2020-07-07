@@ -91,14 +91,16 @@ class _ProviderPageViewState extends State<_ProviderPageView>
 
   @override
   Widget build(BuildContext context) {
+  
     return Scaffold(
       backgroundColor: Colors.grey[900],
       appBar: widget.providers.length <= 1
           ? null
           : PreferredSize(
-              child: Container(
-                color: Colors.grey[800],
-                child: TabBar(
+              child: Material(
+                color: Color(0xff2D2D2D),
+                elevation: 6,
+                child: SafeArea(child: Container(height: 36, child:TabBar(
                   indicator: BoxDecoration(),
                   indicatorWeight: 0,
                   labelPadding: EdgeInsets.all(0),
@@ -115,7 +117,7 @@ class _ProviderPageViewState extends State<_ProviderPageView>
                           padding: EdgeInsets.symmetric(
                               horizontal: 12, vertical: 11),
                           color: tabController.index == index
-                              ? Colors.black
+                              ? Color(0xff1E1E1E)
                               : null,
                           child: Text(
                               '${provider.title ?? provider.runtimeType.toString()}',
@@ -124,15 +126,18 @@ class _ProviderPageViewState extends State<_ProviderPageView>
                       );
                     },
                   ).toList(),
-                ),
+                ),),),
               ),
               preferredSize: Size(double.infinity, 36),
             ),
       bottomNavigationBar: widget.providers.length <= 1
           ? null
           : Container(
-              height: 22,
+              
               color: Colors.blue,
+              child: SafeArea(child: Container(
+              height: 22,
+             
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -209,7 +214,7 @@ class _ProviderPageViewState extends State<_ProviderPageView>
                   ),
                 ],
               ),
-            ),
+            ),),),
       body: widget.child != null
           ? Center(child: widget.child)
           : TabBarView(
@@ -269,8 +274,11 @@ class StaticTargetErrorWidget extends StatelessWidget {
                   Timeline.timeSync("Doing Something", () {
                     postEvent('Preview.hotRestart', <String, String>{});
                   });
-
-                  await http.post('http://127.0.0.1:8084?hotrestart=true');
+                  try {
+                    await http.post('http://127.0.0.1:8084?hotrestart=true');
+                  } catch (e) {
+                    print('preview server is not available');
+                  }
                 }),
           ),
           Text(

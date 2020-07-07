@@ -23,16 +23,21 @@ Future<void> main() async {
       .transform(Utf8Decoder())
       .transform(LineSplitter())
       .map((event) => StreamResponse(stdin: event));
-  final server = await HttpServer.bind('127.0.0.1', port);
-  Stream<StreamResponse> requests =
-      server.map((event) => StreamResponse(request: event));
+  Stream<StreamResponse> requests;
+  try {
+    final server = await HttpServer.bind('127.0.0.1', port);
+    requests = server.map((event) => StreamResponse(request: event));
 
-  ProcessSignal.sigint.watch().listen((_) async {
-    print('onClose');
-    await server.close();
-  });
+    ProcessSignal.sigint.watch().listen((_) async {
+      print('onClose');
+      await server.close();
+    });
+  } catch (e) {
+    stdout.write('error');
+    stdout.write(e);
+  }
 
-  final group = StreamGroup.merge([cmdLine, requests]);
+  final group = StreamGroup.merge([cmdLine, if (requests != null) requests]);
 
   await for (final response in group) {
     response.when(

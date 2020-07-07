@@ -3,6 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 export 'package:device_frame/device_frame.dart'
     show DeviceFrameStyle, DeviceNotch, DeviceSideButton;
+import 'frame_painter.dart' as frame_painter;
+
+
 
 const previewAppBuilder = kDebugMode ? Frame._appBuilder : null;
 
@@ -92,7 +95,7 @@ class Frame extends StatelessWidget {
         landscape: frame.landscapeSafeArea);
     return MediaQueryFrameProvider(
       mediaQuery: mediaQuery,
-      child: MobileDeviceFrame(
+      child: frame_painter.MobileDeviceFrame(
         platform: frame.platform,
         style: frame.style,
         orientation: frame.orientation,

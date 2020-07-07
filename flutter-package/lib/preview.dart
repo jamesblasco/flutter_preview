@@ -68,6 +68,7 @@ abstract class PreviewProvider extends StatelessWidget with Previewer {
             child: Padding(
           padding: EdgeInsets.all(20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: previews
                 .map<Widget>((e) => _Preview(
                       child: e,
@@ -190,3 +191,5 @@ class _PreviewState extends State<_Preview> {
     super.dispose();
   }
 }
+
+
