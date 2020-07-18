@@ -13,7 +13,7 @@ var rcpService: RcpService;
 export class PreviewService {
     private readonly disposables: vscode.Disposable[] = [];
 
-    private readonly path: string;
+    private readonly workspaceUri: vscode.Uri;
     private childProcess: cp.ChildProcess | undefined;
     public isActive: Boolean = false;
 
@@ -22,8 +22,8 @@ export class PreviewService {
 
     private rcpService: RcpService | undefined;
 
-    constructor(path: string) {
-        this.path = path;
+    constructor(workspaceUri: vscode.Uri) {
+        this.workspaceUri = workspaceUri;
     }
 
     async start() {
@@ -48,11 +48,13 @@ export class PreviewService {
         let self = this;
         console.log('Set up dart process');
         try {
+
+    
             this.childProcess = cp.spawn('flutter', [
                 'pub',
                 'run',
                 'preview:preview'
-            ], { cwd: this.path });
+            ], { cwd: this.workspaceUri.fsPath, shell: true });
 
             rcpService = new RcpService(this.childProcess!.stdout!, this.childProcess!.stdin!);
             var sr = this.rcpService;
@@ -69,8 +71,11 @@ export class PreviewService {
             });
             console.log('Finish Set up dart process');
             this.childProcess?.on('error', (err) => {
+              //  this.cancel();
                 console.log('Error dart process: ', err.toString());
             });
+
+          
 
             this.childProcess?.stderr?.on('data',
                 function (data) {
@@ -108,7 +113,7 @@ export class PreviewService {
             this.cancel();
             return;
         }
-        let disp = vscode.debug.onDidTerminateDebugSession(() =>
+        let disp = vscode.debug.onDidTerminateDebugSession((e) =>
             this.cancel()
         );
         this.disposables.push(disp);
@@ -145,7 +150,9 @@ export class PreviewService {
     onDidUpdateActiveTextEditor() {
         const editor = vscode.window.activeTextEditor;
         this.currentDocument = editor?.document?.uri;
-        const path = this.currentDocument!.toString().split(":")[1].replace(this.path + '/', '');
+       
+        let relativePath = vscode.Uri.file(this.currentDocument!.fsPath.replace(this.workspaceUri.fsPath, ''));
+        const path = relativePath.path.toString().replace('/', '');
 
         rcpService.request('preview.setActiveFile', { path: path }).then((needsHotReload) => {
 

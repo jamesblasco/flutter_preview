@@ -30,10 +30,8 @@ export function activate(context: vscode.ExtensionContext) {
 		// The code you place here will be executed every time your command is executed
 
 		if (vscode.workspace.workspaceFolders) {
-			const folderPath = vscode.workspace.workspaceFolders[0].uri
-				.toString()
-				.split(":")[1];
-
+			const folderPath = vscode.workspace.workspaceFolders[0].uri;
+			
 			service?.dispose();
 			service = new PreviewService(folderPath);
 
