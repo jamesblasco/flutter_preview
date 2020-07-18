@@ -13,7 +13,7 @@ class ResizableWidget extends StatefulWidget {
   });
 
   final Widget child;
-  
+
   @override
   _ResizableWidgetState createState() => _ResizableWidgetState();
 }

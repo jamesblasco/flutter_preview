@@ -1,9 +1,10 @@
+import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:preview/preview.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:preview/preview.dart';
 
 class MusicCard extends StatelessWidget {
   final String title;
@@ -22,6 +23,12 @@ class MusicCard extends StatelessWidget {
       : super(key: key);
 
   Future<Color> getImagePalette(ImageProvider imageProvider) async {
+    final ImageStream stream = imageProvider.resolve(ImageConfiguration.empty);
+    final Completer<void> completer = Completer<void>();
+    stream.addListener(ImageStreamListener(
+        (ImageInfo info, bool syncCall) => completer.complete()));
+    await completer.future;
+
     final PaletteGenerator paletteGenerator =
         await PaletteGenerator.fromImageProvider(imageProvider);
     return paletteGenerator.dominantColor.color;
@@ -125,29 +132,29 @@ class WidgetPreview extends PreviewProvider {
         child: MusicCard(
           title: 'Blond',
           singer: 'Frank Ocean',
-          image: PreviewImage.asset('preview_assets/cover1.jpg'),
+          image: PreviewImage.asset('preview/assets/cover1.jpg'),
           onTap: () => {},
         ),
       ),
       Preview(
-        height: 300,
+        height: 200,
         width: 200,
         mode: UpdateMode.hotRestart,
         child: MusicCard(
           title: 'Safe',
           singer: 'Arlo',
-          image: PreviewImage.asset('preview_assets/cover2.jpg'),
+          image: PreviewImage.asset('preview/assets/cover2.jpg'),
           onTap: () => {},
         ),
       ),
       Preview(
-        height: 300,
-        width: 200,
+        height: 200,
+        width: 300,
         mode: UpdateMode.hotReload,
         child: MusicCard(
           title: '1989',
           singer: 'Taylor Swift',
-          image: PreviewImage.asset('preview_assets/cover3.jpg'),
+          image: PreviewImage.asset('preview/assets/cover3.jpg'),
           onTap: () => {},
         ),
       ),
@@ -160,10 +167,12 @@ class Resizable extends ResizablePreviewProvider with Previewer {
   Preview get preview {
     return Preview(
       mode: UpdateMode.hotReload,
+      screenshotSettings:
+          ScreenshotSettings(pixelRatio: 4, filename: 'test.png'),
       child: MusicCard(
         title: 'Blond',
         singer: 'Frank Ocean',
-        image: PreviewImage.asset('preview_assets/cover1.jpg'),
+        image: PreviewImage.asset('preview/assets/cover1.jpg'),
         onTap: () => {},
       ),
     );
@@ -184,9 +193,9 @@ class StaggeredCard extends StatelessWidget with Previewer {
 
   @override
   Widget build(BuildContext context) {
-    final a = AlbumData('Blond', 'Frank Ocean', 'preview_assets/cover1.jpg');
-    final b = AlbumData('Blond', 'Frank Ocean', 'preview_assets/cover2.jpg');
-    final c = AlbumData('Blond', 'Frank Ocean', 'preview_assets/cover3.jpg');
+    final a = AlbumData('Blond', 'Frank Ocean', 'preview/assets/cover1.jpg');
+    final b = AlbumData('Blond', 'Frank Ocean', 'preview/assets/cover2.jpg');
+    final c = AlbumData('Blond', 'Frank Ocean', 'preview/assets/cover3.jpg');
     final list = [a, b, c, b, a, c, b, a, a, a, a, a, a, a];
     return StaggeredGridView.countBuilder(
       padding: EdgeInsets.all(4),

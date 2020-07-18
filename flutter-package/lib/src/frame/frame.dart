@@ -5,8 +5,6 @@ export 'package:device_frame/device_frame.dart'
     show DeviceFrameStyle, DeviceNotch, DeviceSideButton;
 import 'frame_painter.dart' as frame_painter;
 
-
-
 const previewAppBuilder = kDebugMode ? Frame._appBuilder : null;
 
 class FrameData {

@@ -2,75 +2,77 @@
 
 import * as vscode from 'vscode';
 
-import { ChildProcess } from 'child_process';
-const kill  = require('tree-kill');
-const spawn = require('child_process').spawn;
+import * as cp from 'child_process';
+import { RcpService } from './rcp';
+const kill = require('tree-kill');
+
 
 const isActiveContext = 'flutter_preview.isActive';
-
+var rcpService: RcpService;
 
 export class PreviewService {
     private readonly disposables: vscode.Disposable[] = [];
 
-    private readonly path: String;
-    private process: ChildProcess | undefined;
+    private readonly path: string;
+    private childProcess: cp.ChildProcess | undefined;
     public isActive: Boolean = false;
+
 
     private currentDocument: vscode.Uri | undefined;
 
-    constructor(path: String) {
+    private rcpService: RcpService | undefined;
+
+    constructor(path: string) {
         this.path = path;
     }
 
     async start() {
+        let self = this;
         if (this.isActive && vscode.debug.activeDebugSession?.name === 'Flutter Preview') {
             vscode.window.showInformationMessage('Flutter preview is already running');
             return;
         }
         this.isActive = true;
         vscode.commands.executeCommand("setContext", isActiveContext, true);
-        this.launchDartPreviewProccess();
-        await this.launchDebugSession();
-        let disp = vscode.workspace.onDidSaveTextDocument((e) => { this.onDidSaveTextEditor(e); });
-        let disp2 = vscode.window.onDidChangeActiveTextEditor((e) => {
+        await this.launchDartPreviewProccess();
 
-            this.onDidUpdateActiveTextEditor();
+        let disp = vscode.workspace.onDidSaveTextDocument((e) => { self.onDidSaveTextEditor(e); });
+        let disp2 = vscode.window.onDidChangeActiveTextEditor((e) => {
+            self.onDidUpdateActiveTextEditor();
         });
         this.disposables.push(disp, disp2);
         this.onDidUpdateActiveTextEditor();
     }
 
-    launchDartPreviewProccess() {
+    async launchDartPreviewProccess() {
+        let self = this;
+        console.log('Set up dart process');
         try {
-            this.process = spawn('flutter', [
+            this.childProcess = cp.spawn('flutter', [
                 'pub',
                 'run',
-                'preview:run'
+                'preview:preview'
             ], { cwd: this.path });
 
+            rcpService = new RcpService(this.childProcess!.stdout!, this.childProcess!.stdin!);
+            var sr = this.rcpService;
+            var ch = this.childProcess;
 
-            this.process?.on('exit', (code) => {
-                console.log('child process exited with code : ', code);
-            });
-
-
-            this.process?.on('error', (err) => {
-                console.log('Error: ', err.toString());
-            });
-            this.process?.stdout?.on('data', function (data) {
-                if (`${data}` === 'Needs reload\n') {
-                    console.log('Hot reload');
-                    vscode.commands.executeCommand('flutter.hotReload');
-                } if (`${data}` === 'Needs restart\n') {
-                    console.log('Hot Restart');
+            rcpService.onNotification((data) => {
+                if (data['method'] === 'preview.restart') {
                     vscode.commands.executeCommand('flutter.hotRestart');
-                } else {
-                    console.log("Got data from child: " + data);
-                }
+                } else if (data['method'] === 'preview.launch') {
+                    let port = data['params']['port'];
+                    self.launchDebugSession(port);
 
+                }
+            });
+            console.log('Finish Set up dart process');
+            this.childProcess?.on('error', (err) => {
+                console.log('Error dart process: ', err.toString());
             });
 
-            this.process?.stderr?.on('data',
+            this.childProcess?.stderr?.on('data',
                 function (data) {
                     console.log('err data: ' + data);
                 }
@@ -81,18 +83,22 @@ export class PreviewService {
     }
 
 
-    private async launchDebugSession() {
+
+
+
+    private async launchDebugSession(port: number) {
 
         const launchConfiguration = {
             type: "dart",
             name: "Flutter Preview",
             request: "launch",
-           // deviceId: "macOS",
+            // deviceId: "macOS",
             cwd: "",
             internalConsoleOptions: "neverOpen",
             args: [
                 "--target=lib/main.preview.dart",
-                "--dart-define=flutter.preview=true"
+                "--dart-define=flutter.preview=true",
+                `--dart-define=preview.port=${port}`
             ],
         };
 
@@ -111,15 +117,19 @@ export class PreviewService {
 
     cancel() {
         console.log('cancel session');
-        
+
         this.isActive = false;
-        if (this.process !== undefined) {
-            kill(this.process.pid, 'SIGKILL');
+        this.rcpService?.dispose();
+        this.rcpService = undefined;
+        if (this.childProcess !== undefined) {
+            kill(this.childProcess.pid, 'SIGKILL');
         }
-        this.process = undefined;
+        this.childProcess = undefined;
         this.disposables.forEach((s) => s.dispose());
         vscode.commands.executeCommand("setContext", isActiveContext, false);
     }
+
+
 
 
 
@@ -136,10 +146,17 @@ export class PreviewService {
         const editor = vscode.window.activeTextEditor;
         this.currentDocument = editor?.document?.uri;
         const path = this.currentDocument!.toString().split(":")[1].replace(this.path + '/', '');
-        this.process?.stdin?.write(path + '\n');
+
+        rcpService.request('preview.setActiveFile', { path: path }).then((needsHotReload) => {
+
+            if (needsHotReload) {
+                vscode.commands.executeCommand('flutter.hotReload');
+            }
+        });
     };
 
     dispose() {
+
         this.cancel();
     }
 }

@@ -1,6 +1,6 @@
 name: preview
-description: Create samples of you widgets and preview them in real time
-version: 0.0.5+2
+description: Create samples of your Flutter widgets and preview them in real time
+version: 0.0.8
 repository: https://github.com/jamesblasco/flutter_preview/
 
 environment:
@@ -18,7 +18,16 @@ dependencies:
   http: '>=0.12.0+2 <0.13.0'
   dart_style: ^1.3.4
   device_frame: ^0.1.0
- 
+  json_rpc_2: ^2.2.1
+  web_socket_channel: ^1.1.0
+  stream_channel: ^2.0.0
+  shelf: ^0.7.7
+  shelf_router: ^0.7.2
+  shelf_web_socket: ^0.2.3
+  shelf_static: ^0.2.8
+  http_server: ^0.9.8+3
+  mime: ^0.9.6+3
+  http_parser: ^3.1.4
  
 #  window_size: 
 #   path: ./plugins/window_size/

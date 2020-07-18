@@ -190,7 +190,7 @@ class MobileDeviceFrame extends StatelessWidget {
 
 //
 // Modified to work with web
-// Anything that uses Path.combined is either not executed on web, or 
+// Anything that uses Path.combined is either not executed on web, or
 // replaced with blendMode
 //
 class _DeviceFramePainter extends CustomPainter {

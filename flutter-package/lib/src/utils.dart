@@ -1,6 +1,4 @@
-
-
-const kPreviewMode = bool.fromEnvironment('flutter.preview', defaultValue: false);
+import 'package:preview/src/vm/preview_service.dart';
 
 bool debugAssertPreviewModeRequired([dynamic t]) {
   assert(() {
@@ -10,11 +8,29 @@ bool debugAssertPreviewModeRequired([dynamic t]) {
   return true;
 }
 
+bool debugPreviewPortRequired([dynamic t]) {
+  assert(() {
+    if (kPreviewPort == null) throw PreviewPortRequiredException(t);
+    return true;
+  }());
+  return true;
+}
+
+class PreviewPortRequiredException implements Exception {
+  final dynamic t;
+  const PreviewPortRequiredException([this.t]);
+  @override
+  String toString() =>
+      'Preview port is required for using this widget ${t ?? ''}. \n'
+      'You should not used it inside your app';
+}
+
 class PreviewModeRequiredException implements Exception {
   final dynamic t;
   const PreviewModeRequiredException([this.t]);
   @override
-  String toString() => 'Preview mode is required for using this widget ${t ??''}. \n'
+  String toString() =>
+      'Preview mode is required for using this widget ${t ?? ''}. \n'
       'You should not used it inside your app';
 }
 

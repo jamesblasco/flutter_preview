@@ -1,9 +1,12 @@
+library preview;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:preview/src/controls.dart';
 import 'package:preview/src/frame/frame.dart';
 import 'package:preview/src/resizable.dart';
 import 'package:preview/src/persist.dart';
+import 'package:preview/src/screenshot.dart';
 
 import 'src/utils.dart';
 export 'src/frame/frame.dart';
@@ -11,6 +14,7 @@ export 'src/frame/frames.dart';
 export 'src/preview_page.dart';
 export 'src/resizable.dart';
 export 'src/assets/image.dart';
+export 'src/screenshot.dart';
 
 class Preview extends StatelessWidget {
   final Widget child;
@@ -20,6 +24,7 @@ class Preview extends StatelessWidget {
   final FrameData frame;
   final ThemeData theme;
   final UpdateMode mode;
+  final ScreenshotSettings screenshotSettings;
 
   Preview({
     Key key,
@@ -30,8 +35,11 @@ class Preview extends StatelessWidget {
     this.frame,
     this.theme,
     this.mode = UpdateMode.hotRestart,
+    this.screenshotSettings,
   })  : assert(debugAssertPreviewModeRequired(runtimeType)),
         super(key: key);
+
+  String get name => child.runtimeType.toString();
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +78,7 @@ abstract class PreviewProvider extends StatelessWidget with Previewer {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: previews
-                .map<Widget>((e) => _Preview(
+                .map<Widget>((Preview e) => _Preview(
                       child: e,
                       updateMode: e.mode,
                     ))
@@ -98,8 +106,9 @@ abstract class ResizablePreviewProvider extends StatelessWidget with Previewer {
 enum UpdateMode { hotReload, hotRestart }
 
 class _Preview extends StatefulWidget {
-  final Widget child;
+  final Preview child;
   final bool resizable;
+
   final UpdateMode updateMode;
 
   const _Preview({
@@ -115,17 +124,33 @@ class _Preview extends StatefulWidget {
 
 class _PreviewState extends State<_Preview> {
   PersistController controller;
+  ScreenshotController screenshotController;
 
   @override
   void initState() {
     controller = PersistController();
+    screenshotController = ScreenshotController();
+    ScreenshotSettings screenshotSettings =
+        widget.child.screenshotSettings ?? ScreenshotSettings();
+
+    if (widget.child.name != null && screenshotSettings.filename == null) {
+      screenshotSettings =
+          screenshotSettings.copyWith(filename: widget.child.name + '.png');
+    }
+    screenshotController.settings = screenshotSettings;
     controller.isHotRestart = widget.updateMode == UpdateMode.hotRestart;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final preview = Persist(controller: controller, child: widget.child);
+    final preview = Persist(
+      controller: controller,
+      child: Screenshottable(
+        child: widget.child,
+        controller: screenshotController,
+      ),
+    );
 
     if (widget.resizable) {
       return OnHover(
@@ -141,6 +166,7 @@ class _PreviewState extends State<_Preview> {
                   ignoring: !shouldDisplay,
                   child: PreviewControls(
                     controller: controller,
+                    screenshotController: screenshotController,
                   ),
                 ),
               ),
@@ -167,6 +193,7 @@ class _PreviewState extends State<_Preview> {
                 ignoring: !shouldDisplay,
                 child: PreviewControls(
                   controller: controller,
+                  screenshotController: screenshotController,
                 ),
               ),
             ),
@@ -191,5 +218,3 @@ class _PreviewState extends State<_Preview> {
     super.dispose();
   }
 }
-
-
