@@ -12,7 +12,12 @@
 
 </p>
 
- 
+This project is experimental but safe to use as not code is added during compilation.
+
+Current limitations:
+  - Flutter web or desktop is not officially released neither stable yet.
+  - It is not possible to use debug flutter web apps inside an iframe [See #61788](https://github.com/flutter/flutter/issues/61788), so it is not possible to       emmbed it inside vscode yet. Upvote the issue if you are interested in this feature.
+  - Not Android Studio plugin yet, but soon ;). Now only works with vscode
 
 ## Getting Started
 
@@ -34,6 +39,11 @@
       - stable: Android, iOS simulators or real devices,
       - beta: web, android and ios
       - dev/master: macos, windows, web, android, ios and linux
+      
+   > **Using macos?** 
+   > We use the local network layer to communicate between the preview and the damenon service. Macos limits all network requets by default and so you will need to allow during debug by adding:
+   > <key>com.apple.security.network.client</key> <true/>
+   > to macos/Runner/DebugProfile.entitlements
   
 ### Adding a preview
 
@@ -168,16 +178,16 @@ Adding sample assets to your flutter can increase the app without no need.
 
 For images, you can NetworkImage as before.
 
-But if you want to use local images, don't add it to your flutter project! 
+But if you want to use local images, don't add them to your flutter project! 
 
 You can use PreviewImage instead.
 
 ```dart
 //DON'T
-AssetImage('images/dart.png')
+AssetImage('images/example.png')
 
 //DO
-PreviewImage('images/dart.png')
+PreviewImage('debug_images/example.png')
 ```
 
 <pre><code># pubspec.yaml
