@@ -13,11 +13,8 @@
 </p>
 
 This project is experimental but safe to use as not code is added during compilation.
+It won't be stable until Flutter web or desktop reaches a stable version too.
 
-Current limitations:
-  - Flutter web or desktop is not officially released neither stable yet.
-  - It is not possible to use debug flutter web apps inside an iframe [See #61788](https://github.com/flutter/flutter/issues/61788), so it is not possible to       emmbed it inside vscode yet. Upvote the issue if you are interested in this feature.
-  - Not Android Studio plugin yet, but soon ;). Now only works with vscode
 
 ## Getting Started
 
@@ -35,16 +32,18 @@ Current limitations:
   - Click the button to launch Flutter Preview
   
   - If a devices is not active yet, it will ask you to select the device where you want to run Flutter Preview.
-    The available devices are:
-      - stable: Android, iOS simulators or real devices,
-      - beta: web, android and ios
-      - dev/master: macos, windows, web, android, ios and linux
+    Read more about [how to choose a device](https://github.com/jamesblasco/flutter_preview/issues/7) to run Flutter Preview.
       
+     
+     <img align="right"  height="100px" src="https://github.com/jamesblasco/flutter_preview/blob/master/screenshots/macos_helper.png?raw=true" />
+         
    > **Using macos?** 
    > We use the local network layer to communicate between the preview and the damenon service. Macos limits all network requets by default and so you will need to allow during debug by adding:
    > <key>com.apple.security.network.client</key> <true/>
    > to macos/Runner/DebugProfile.entitlements
-  
+   
+
+   
 ### Adding a preview
 
   A vscode snippet is availabe for creating a preview, just type `preview` and it will appear.
