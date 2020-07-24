@@ -5,7 +5,7 @@
 
 <p align="center">
   <br/>
-          Create samples of you widgets and preview them in real time
+          Create samples of your widgets and preview them in real time
     <br/>
     <br/>
   <img   width="640px" src="https://github.com/jamesblasco/flutter_preview/blob/master/screenshots/flutter_preview_header.png?raw=true" />
@@ -38,7 +38,7 @@ It won't be stable until Flutter web or desktop reaches a stable version too.
      <img align="right"  height="100px" src="https://github.com/jamesblasco/flutter_preview/blob/master/screenshots/macos_helper.png?raw=true" />
          
    > **Using macos?** 
-   > We use the local network layer to communicate between the preview and the damenon service. Macos limits all network requets by default and so you will need to allow during debug by adding:
+   > We use the local network layer to communicate between the preview and the damenon service. Macos limits all network requets by default and so you will need to allow it during debug by adding:
    > <key>com.apple.security.network.client</key> <true/>
    > to macos/Runner/DebugProfile.entitlements
    
