@@ -5,7 +5,7 @@
 
 <p align="center">
   <br/>
-          Create samples of you widgets and preview them in real time
+          Create samples of your widgets and preview them in real time
     <br/>
     <br/>
   <img   width="640px" src="https://github.com/jamesblasco/flutter_preview/blob/master/screenshots/flutter_preview_header.png?raw=true" />
